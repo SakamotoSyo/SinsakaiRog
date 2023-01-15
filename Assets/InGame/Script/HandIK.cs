@@ -18,11 +18,14 @@ public class HandIK : MonoBehaviour
     [SerializeField, Range(0f, 1f)] float _leftPositionWeight = 0;
     /// <summary>左手の Rotation に対するウェイト</summary>
     [SerializeField, Range(0f, 1f)] float _leftRotationWeight = 0;
+    CardBaseClass _cardBaseClass;
     Animator _anim = default;
 
     void Start()
     {
         _anim = GetComponent<Animator>();
+        _cardBaseClass = new SlashCard();
+        _cardBaseClass.UseEffect();
     }
 
     void OnAnimatorIK(int layerIndex)
