@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -16,10 +17,13 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     bool _moveFenish = false;
     Vector3 _savePos;
 
-    private void Start()
+    private async void Start()
     {
-        _savePos = transform.localPosition;
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        _savePos = this.transform.localPosition;
     }
+
+    
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -48,11 +52,6 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     {
         _controller.CardAnimation.SelectAnim(true);
         _rectpos.localScale *= _cardPickSize;
-        if (!_moveFenish)
-        {
-            _savePos = this.transform.localPosition;
-        }
-        _moveFenish = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
