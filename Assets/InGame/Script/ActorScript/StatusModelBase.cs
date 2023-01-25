@@ -6,9 +6,10 @@ using System;
 
 public abstract class StatusModelBase : MonoBehaviour, IDamageble
 {
-    [Header("Å‘å‚ÌHP")]
-    [SerializeField] private float _maxHp;
-
+    public float MaxHpNum => _maxHp.Value;
+    public IObservable<float> MaxHp => _maxHp;
+    protected ReactiveProperty<float> _maxHp = new ReactiveProperty<float>();
+    public float CurrentHpNum => _currentHp.Value; 
     public IObservable<float> CurrentHp => _currentHp;
     protected ReactiveProperty<float> _currentHp = new ReactiveProperty<float>();
     public IObservable<float> Attack => _attack;
