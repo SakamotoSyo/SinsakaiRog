@@ -27,12 +27,19 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
 
     public void OnDrag(PointerEventData eventData)
     {
-        _rectpos.position = eventData.position;
+        if (!_moveFenish) 
+        {
+            _rectpos.position = eventData.position;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
+        if (!_moveFenish) 
+        {
+            _savePos = this.transform.localPosition;
+        }
+        
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -40,11 +47,13 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
         DOTween.To(() => transform.localPosition,
             x => transform.localPosition = x,
             _savePos,0.5f)
+            .OnStart(() => _moveFenish = true)
             .OnComplete(() => 
             {
                 transform.localPosition = _savePos;
                 _moveFenish = false;
             });
+
     }
 
 
