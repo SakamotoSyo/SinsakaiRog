@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 using System;
 
-public abstract class StatusModelBase : MonoBehaviour, IDamageble
+public abstract class StatusModelBase :MonoBehaviour, IDamageble
 {
     public float MaxHpNum => _maxHp.Value;
     public IObservable<float> MaxHp => _maxHp;
@@ -17,28 +17,34 @@ public abstract class StatusModelBase : MonoBehaviour, IDamageble
     public IObservable<float> Defense => _defense;
     protected ReactiveProperty<float> _defense = new ReactiveProperty<float>();
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake() 
     {
-        
+        _maxHp.Value = 100;
+        _currentHp.Value = 100; 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// 攻撃の数値を変化される
+    /// </summary>
+    /// <param name="value">変化させる値</param>
     public void ChangeValueAttack(float value)
     {
         _attack.Value = value;
     }
 
+    /// <summary>
+    /// 防御の数値を変化される
+    /// </summary>
+    /// <param name="value">変化させる値</param>
     public void ChangeValueDefense(float value)
     {
         _defense.Value = value;
     }
 
+    /// <summary>
+    /// Hpの数値を変化される
+    /// </summary>
+    /// <param name="value">変化させる値</param>
     public void ChangeValueHealth(float value)
     {
         _currentHp.Value = value;

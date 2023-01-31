@@ -8,13 +8,17 @@ public class DataBaseScript : MonoBehaviour
 {
     [Header("カードのテキストデータ")]
     [SerializeField] private TextAsset _cardData;
-
-    public List<CardBaseClass> CardBaseClassList => _cardList;
+    [Header("カードのSpriteデータ")]
+    [SerializeField] private List<SpriteData> _cardSprite = new List<SpriteData>();
+    public static List<CardBaseClass> CardBaseClassList => _cardList;
     [Header("カードのデータ")]
-    [SerializeField] private List<CardBaseClass> _cardList = new List<CardBaseClass>();
+    private static List<CardBaseClass> _cardList = new List<CardBaseClass>();
+
+
 
     PlayerStatus _status;
-    EnemyStatus _enemyStaus;
+    //ToDo: SerializeFieldを消す
+    [SerializeField] EnemyStatus _enemyStaus;
 
     readonly int _floatLoopNum = 2;
 
@@ -25,7 +29,7 @@ public class DataBaseScript : MonoBehaviour
 
     private void Start()
     {
-        _cardList[0].UseEffect(_status, _enemyStaus);
+
     }
 
     private void CardDataInit() 
@@ -34,35 +38,7 @@ public class DataBaseScript : MonoBehaviour
         //最初の行はスキップ
         sr.ReadLine();
 
-        //while (true) 
-        //{
-        //    string line = sr.ReadLine();
-
-        //    if (string.IsNullOrEmpty(line)) 
-        //    {
-        //        break;
-        //    }
-
-        //    string[] parts = line.Split(' ');
-
-        //    int id = int.Parse(parts[0]);
-        //    float[] floats = new float[_floatLoopNum];
-        //    for (int i = 0; i < _floatLoopNum; i++) 
-        //    {
-
-        //        floats[i] = float.Parse(parts[i + 2]);
-        //    }
-
-        //    List<EffectData> effectList = new List<EffectData>();
-        //    ここのマジックナンバー後で修正
-        //    for (int i = 7; i < parts.Length; i++) 
-        //    {
-        //        var data = parts[i].Split("_");
-        //        effectList.Add( new EffectData(MakeClass<ICardEffect>(data[0]), float.Parse(data[1])));
-        //    }
-        //    CardBaseClass cardBaseClass = new CardBaseClass(id, parts[1], floats[0], floats[1], parts[6], parts[7], effectList);
-        //}
-
+        //TODO:データの数だけforが周りようにする
         for (int i = 0; i < 1; i++) 
         {
             string line = sr.ReadLine();
@@ -77,22 +53,32 @@ public class DataBaseScript : MonoBehaviour
             Debug.Log(line);
             int id = int.Parse(parts[0]);
             float[] floats = new float[_floatLoopNum];
-            for (int j = 0; j < _floatLoopNum; j++)
-            {
-                floats[j] = float.Parse(parts[j + 2]);
-            }
+
+            floats[0] = float.Parse(parts[2]);
+            floats[1] = float.Parse(parts[4]);
 
             List<EffectData> effectList = new List<EffectData>();
             //ここのマジックナンバー後で修正
-            for (int j = 6; j < parts.Length; j++)
+            for (int j = 7; j < parts.Length; j++)
             {
                 var data = parts[j].Split('_');
                 effectList.Add(new EffectData(MakeClass<IEffect>(data[0]), float.Parse(data[1])));
             }
-            CardBaseClass cardBaseClass = new CardBaseClass(id, parts[1], floats[0], floats[1], parts[4], parts[5], effectList);
+            
+            CardBaseClass cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1], parts[5], GetSprite(parts[6]), effectList);
             _cardList.Add(cardBaseClass);
         }
 
+    }
+
+    /// <summary>
+    /// Enumの要素と文字列が一致したらSpriteを返す
+    /// </summary>
+    /// <param name="imageType"></param>
+    public Sprite GetSprite(string imageType)
+    {
+        ImageType type = Enum.Parse<ImageType>(imageType);
+        return _cardSprite.Find(x => x.ImageType == type).CardSprite;
     }
 
     public CardBaseClass GetRandomCard() 
@@ -106,8 +92,23 @@ public class DataBaseScript : MonoBehaviour
     /// <param name="className"></param>
     private T MakeClass<T>(string className)
     {
-        Debug.Log(className);
         Type type = Type.GetType(className);
+        Debug.Log(type);
         return (T)Activator.CreateInstance(type);
     }
+}
+
+[Serializable]
+public class SpriteData 
+{
+    public Sprite CardSprite => _cardSprite;
+    [SerializeField] private Sprite _cardSprite;
+    public ImageType ImageType => _imageType;
+    [SerializeField] private ImageType _imageType;
+    
+}
+
+public enum ImageType 
+{
+    Slash,
 }
