@@ -11,6 +11,8 @@ public class PlayerPresenter : MonoBehaviour
     void Start()
     {
         _playerStauts.HandCardList.ObserveAdd().Subscribe(x => _playerView.DrawView(x.Value)).AddTo(this);
+        _playerStauts.MaxHp.Subscribe(value => _playerView.MaxHpSet(value)).AddTo(this);
+        _playerStauts.CurrentHp.Subscribe(value => _playerView.SetHpCurrent(value)).AddTo(this);
     }
 
     // Update is called once per frame

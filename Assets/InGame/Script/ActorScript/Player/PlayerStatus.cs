@@ -5,7 +5,10 @@ using UniRx;
 
 public class PlayerStatus : StatusModelBase, IPlayerStatus
 {
-   [Tooltip("手札のカードリスト")]
+    [Header("カードに使用に使うコスト")]
+    [SerializeField] private float _myCost;
+
+    [Tooltip("手札のカードリスト")]
    public IReactiveCollection<CardBaseClass> HandCardList => _handCardList;
    private ReactiveCollection<CardBaseClass> _handCardList = new ReactiveCollection<CardBaseClass>();
 
@@ -25,13 +28,14 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         }
     }
 
+    //TODO:ここのRemoveコメントを外す
     /// <summary>
     /// カードをドローする
     /// </summary>
     public void DrowCard() 
     {
         _handCardList.Add(_deckCardList[0]);
-        _deckCardList.RemoveAt(0);
+        //_deckCardList.RemoveAt(0);
     }
 
 
