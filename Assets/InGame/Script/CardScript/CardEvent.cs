@@ -10,12 +10,14 @@ using Cysharp.Threading.Tasks;
 public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("カーソルを合わせたときのカードの大きさ倍率")]
-    [SerializeField] float _cardPickSize;
-    [SerializeField] RectTransform _rectpos;
-    [SerializeField] CardController _controller;
+    [SerializeField] private float _cardPickSize;
+    [SerializeField] private RectTransform _rectpos;
+    [SerializeField] private CardController _controller;
 
-    bool _moveFenish = false;
-    Vector3 _savePos;
+    private bool _moveFenish = false;
+    private Vector3 _savePos;
+    private Tween _tween;
+
 
     private async void Start()
     {
@@ -44,7 +46,8 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        DOTween.To(() => transform.localPosition,
+        //クリックの終了時クリックし始めたpositionまで戻る
+      _tween = DOTween.To(() => transform.localPosition,
             x => transform.localPosition = x,
             _savePos,0.5f)
             .OnStart(() => _moveFenish = true)
@@ -69,5 +72,8 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
         _rectpos.localScale /= _cardPickSize;
     }
 
-
+    private void OnDestroy()
+    {
+        _tween.Kill();
+    }
 }
