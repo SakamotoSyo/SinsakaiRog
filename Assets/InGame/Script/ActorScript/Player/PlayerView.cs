@@ -9,14 +9,12 @@ public class PlayerView : ActorViewBase
     [SerializeField] private GameObject _cardParentObj;
     [SerializeField] private GameObject _cardPrefab;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
@@ -28,11 +26,5 @@ public class PlayerView : ActorViewBase
         var cardController = obj.GetComponent<CardController>();
         cardController.SetCardBaseClass(card);
     }
-
-    public override void SetHpCurrent(float currentHp)
-    {
-        base.SetHpCurrent(currentHp);
-    }
-
 
 }
