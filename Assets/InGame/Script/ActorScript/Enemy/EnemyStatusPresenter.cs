@@ -5,17 +5,17 @@ using UniRx;
 
 public class EnemyStatusPresenter : MonoBehaviour
 {
-    [SerializeField] EnemyStatus _enemyStatusModel;
-    [SerializeField] EnemyStatusView _enemyView;
+    [SerializeField] private EnemyController _enemyController;
+    [SerializeField] private EnemyStatusView _enemyView;
+    private EnemyStatus _enemyStatusModel;
 
-    // Start is called before the first frame update
     void Start()
     {
-        _enemyStatusModel.CurrentHp.Subscribe(value => _enemyView.SetHpCurrent(value)).AddTo(this);
-        _enemyStatusModel.MaxHp.Subscribe(value => _enemyView.MaxHpSet(value)).AddTo(this);
+        _enemyStatusModel = _enemyController.EnemyStatus;
+        _enemyStatusModel.MaxHp.Subscribe(_enemyView.MaxHpSet).AddTo(this);
+        _enemyStatusModel.CurrentHp.Subscribe(_enemyView.SetHpCurrent).AddTo(this);
     }
 
-    // Update is called once per frame
     void Update()
     {
         

@@ -5,14 +5,17 @@ using UniRx;
 
 public class PlayerPresenter : MonoBehaviour
 {
-    [SerializeField] PlayerStatus _playerStauts;
-    [SerializeField] PlayerView _playerView;
-    // Start is called before the first frame update
+    [SerializeField] private PlayerController _controller;
+    [SerializeField] private PlayerView _playerView;
+    private PlayerStatus _playerStauts;
+
     void Start()
     {
+        _playerStauts = _controller.PlayerStatus;
+        //_playerStauts.CostOb.Subscribe(x => )
         _playerStauts.HandCardList.ObserveAdd().Subscribe(x => _playerView.DrawView(x.Value)).AddTo(this);
-        _playerStauts.MaxHp.Subscribe(value => _playerView.MaxHpSet(value)).AddTo(this);
-        _playerStauts.CurrentHp.Subscribe(value => _playerView.SetHpCurrent(value)).AddTo(this);
+        _playerStauts.MaxHp.Subscribe(_playerView.MaxHpSet).AddTo(this);
+        _playerStauts.CurrentHp.Subscribe(_playerView.SetHpCurrent).AddTo(this);
     }
 
     // Update is called once per frame
