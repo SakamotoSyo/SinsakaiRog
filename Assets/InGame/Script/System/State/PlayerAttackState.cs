@@ -10,4 +10,8 @@ public class PlayerAttackState : State
         
     }
 
+    protected override void OnExit(State nextState)
+    {
+        ActorGenerator.PlayerReceiveEffect.ResetCost();
+    }
 }

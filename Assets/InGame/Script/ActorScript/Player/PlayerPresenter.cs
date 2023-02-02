@@ -12,8 +12,8 @@ public class PlayerPresenter : MonoBehaviour
     void Start()
     {
         _playerStauts = _controller.PlayerStatus;
-        //_playerStauts.CostOb.Subscribe(x => )
         _playerStauts.HandCardList.ObserveAdd().Subscribe(x => _playerView.DrawView(x.Value)).AddTo(this);
+        _playerStauts.CostOb.Subscribe(_playerView.SetCost);
         _playerStauts.MaxHp.Subscribe(_playerView.MaxHpSet).AddTo(this);
         _playerStauts.CurrentHp.Subscribe(_playerView.SetHpCurrent).AddTo(this);
     }

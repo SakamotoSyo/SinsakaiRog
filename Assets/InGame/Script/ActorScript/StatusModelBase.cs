@@ -17,7 +17,7 @@ public abstract class StatusModelBase
     public IObservable<float> Defense => _defense;
     protected ReactiveProperty<float> _defense = new ReactiveProperty<float>();
 
-    public void Init() 
+    public virtual void Init() 
     {
         //ToDo:ここはデバック用に数値を与えている
         _maxHp.Value = 100;

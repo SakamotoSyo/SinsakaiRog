@@ -11,4 +11,8 @@ public interface IReceivePlayerEffect
     public void AddDamage(float damage);
 
     public void DrowCard();
+
+    public bool UseCost(float useCost);
+
+    public void ResetCost();
 }
