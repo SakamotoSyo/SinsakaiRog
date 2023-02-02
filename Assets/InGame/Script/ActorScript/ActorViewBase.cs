@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ActorViewBase : MonoBehaviour
 {
     [Header("HpÇÃRectTransform")]
-    [SerializeField] private RectTransform _rectCurrent;
+    [SerializeField] protected RectTransform _rectCurrent;
     [SerializeField] private Text _maxHpText;
     [SerializeField] private Text _currentHpText;
     [Tooltip("HpÉoÅ[ç≈í∑ÇÃí∑Ç≥")]
@@ -36,7 +36,7 @@ public class ActorViewBase : MonoBehaviour
         }
     }
 
-    private float GetWidth(float value)
+    protected float GetWidth(float value)
     {
         float width = Mathf.InverseLerp(0, _maxTime, value);
         return Mathf.Lerp(0, _maxHpWidth, width);
