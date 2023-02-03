@@ -5949,6 +5949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardTag: Card
+  _actorGenerator: {fileID: 1229297779}
   _uiOutCs: {fileID: 343244224}
   _dataBase: {fileID: 1375434503}
   _particleObj: {fileID: 3656239851103176342, guid: 7e71209fcae471c4d892c9cde03bcc76,
@@ -18606,8 +18607,6 @@ MonoBehaviour:
     type: 3}
   _playerInsPos: {fileID: 738362987}
   _enemyInsPos: {fileID: 732675085}
-  _debugPlayerCon: {fileID: 0}
-  _debugEnemyCon: {fileID: 0}
 --- !u!1 &1231824215
 GameObject:
   m_ObjectHideFlags: 0
@@ -21533,11 +21532,6 @@ MonoBehaviour:
   _cardSprite:
   - _cardSprite: {fileID: 21300000, guid: 4f72e38180f053749bc19e5856a43d72, type: 3}
     _imageType: 0
-  _enemyStaus:
-    _effectDataList: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &1375434504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32617,6 +32611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debugText: {fileID: 1557139436}
+  _generator: {fileID: 1229297779}
 --- !u!1 &2119550246
 GameObject:
   m_ObjectHideFlags: 0

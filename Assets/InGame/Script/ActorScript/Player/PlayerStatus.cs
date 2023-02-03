@@ -9,9 +9,10 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
 {
     public float MaxCost => _maxCost;
     public float Cost => _cost.Value;
-    public IObservable<float> CostOb => _cost; 
+    public IObservable<float> CostOb => _cost;
+    public IReactiveCollection<CardBaseClass> DiscardedCount => _discardedCard;
     public IReactiveCollection<CardBaseClass> HandCardList => _handCardList;
-    public List<CardBaseClass> DeckCardList => _deckCardList;
+    public IReactiveCollection<CardBaseClass> DeckCardList => _deckCardList;
 
 
     [SerializeField] private float _maxCost;
@@ -20,13 +21,16 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     [Tooltip("手札のカードリスト")]
     private ReactiveCollection<CardBaseClass> _handCardList = new();
     [Tooltip("山札のカードリスト")]
-    [SerializeField] private List<CardBaseClass> _deckCardList = new();
+    private ReactiveCollection<CardBaseClass> _deckCardList = new();
+    /// <summary>デバック用変数</summary>
+    [SerializeField] private List<CardBaseClass> _deckCopyList = new();
     [Tooltip("捨て札を貯めておくList")]
-    private List<CardBaseClass> _discardedCard = new();
+    private ReactiveCollection<CardBaseClass> _discardedCard = new();
 
     public override void Init()
     {
         base.Init();
+        _deckCardList = new ReactiveCollection<CardBaseClass>(_deckCopyList);
         _cost.Value = _maxCost;
     }
 
@@ -34,9 +38,9 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     /// コストを使用する
     /// </summary>
     /// <param name="useCost"></param>
-    public bool UseCost(float useCost) 
+    public bool UseCost(float useCost)
     {
-        if (useCost <= _cost.Value) 
+        if (useCost <= _cost.Value)
         {
             _cost.Value -= useCost;
             return true;
@@ -44,7 +48,7 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         return false;
     }
 
-    public void ResetCost() 
+    public void ResetCost()
     {
         _cost.Value = _maxCost;
     }
@@ -55,7 +59,7 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     /// <param name="value"></param>
     public void TestAddCardList()
     {
-        _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);     
+        _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
     }
 
     //TODO:ここのRemoveコメントを外す
@@ -64,22 +68,30 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     /// </summary>
     public void DrawCard()
     {
-        if (_deckCardList.Count != 0)
+        if (_deckCardList.Count == 0 && _discardedCard.Count != 0)
         {
-            _handCardList.Add(_deckCardList[0]);
-            _discardedCard.Add(_deckCardList[0]);
-            _deckCardList.RemoveAt(0);
+            //Drawするカードがなくなった時捨て札を山札に戻す
+            _deckCardList = new ReactiveCollection<CardBaseClass>(_discardedCard);
+            _discardedCard.Clear();
+            Debug.Log("カードを戻した");
+        }
+        else if (_deckCardList.Count == 0 && _discardedCard.Count == 0)
+        {
+            Debug.LogWarning("山札に戻すカードはありません");
         }
         else 
         {
-            //Drawするカードがなくなった時捨て札を山札に戻す
-            _deckCardList = new List<CardBaseClass>(_discardedCard);
-           _discardedCard.Clear();
-
-           _handCardList.Add(_deckCardList[0]);
-            _discardedCard.Add(_deckCardList[0]);
-           _deckCardList.RemoveAt(0);
-            Debug.Log("カードを戻した");
+            _handCardList.Add(_deckCardList[0]);
+            _deckCardList.RemoveAt(0);
         }
+    }
+
+    /// <summary>
+    /// カードを捨て札に加える処理
+    /// </summary>
+    /// <param name="cardBase"></param>
+    public void DiscardedCardAdd(CardBaseClass cardBase) 
+    {
+        _discardedCard.Add(cardBase);
     }
 }

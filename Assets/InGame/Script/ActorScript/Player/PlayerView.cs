@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class PlayerView : ActorViewBase
 {
     [SerializeField] Text _costText;
+    [SerializeField] Text _discardedText;
+    [SerializeField] Text _deckText;
     [SerializeField] private GameObject _cardParentObj;
     [SerializeField] private GameObject _cardPrefab;
 
@@ -22,10 +24,21 @@ public class PlayerView : ActorViewBase
 
     public void DrawView(CardBaseClass card) 
     {
-        var obj = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
+        var obj = Instantiate(_cardPrefab, _cardParentObj.transform.position, Quaternion.identity);
         obj.transform.SetParent(_cardParentObj.transform);
-        var cardController = obj.GetComponent<CardController>();
+        var cardController = obj.GetComponentInChildren<CardController>();
+        cardController.CardAnimation.SetParentTransform(_cardParentObj.transform);
         cardController.SetCardBaseClass(card);
+    }
+
+    public void DiscardedCardView(int count) 
+    {
+        _discardedText.text = count.ToString();
+    }
+
+    public void DeckCardView(int count) 
+    {
+        _deckText.text = count.ToString();
     }
 
     public void SetCost(float cost) 
