@@ -62,7 +62,6 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
     }
 
-    //TODO:ここのRemoveコメントを外す
     /// <summary>
     /// カードをドローする
     /// </summary>
@@ -71,9 +70,14 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         if (_deckCardList.Count == 0 && _discardedCard.Count != 0)
         {
             //Drawするカードがなくなった時捨て札を山札に戻す
-            _deckCardList = new ReactiveCollection<CardBaseClass>(_discardedCard);
+            for (int i = 0; i < _discardedCard.Count; i++) 
+            {
+                _deckCardList.Add(_discardedCard[i]);
+            }
             _discardedCard.Clear();
-            Debug.Log("カードを戻した");
+            _handCardList.Add(_deckCardList[0]);
+            _deckCardList.RemoveAt(0);
+            Debug.Log(_deckCardList.Count);
         }
         else if (_deckCardList.Count == 0 && _discardedCard.Count == 0)
         {
