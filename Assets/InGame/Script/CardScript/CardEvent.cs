@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using System;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
@@ -15,17 +12,26 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     [SerializeField] private CardController _controller;
 
     private bool _moveFenish = false;
+    private Vector3 _localScale;
     private Vector3 _savePos;
     private Tween _tween;
 
-
-    private async void Start()
+    private void Awake()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-        _savePos = this.transform.localPosition;
+        _moveFenish = true;
+        _localScale = _rectpos.localScale;
     }
 
-    
+    private void Start()
+    {
+       
+    }
+
+    private async void OnEnable()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1));
+        _moveFenish = false;
+    }
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -69,7 +75,7 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     public void OnPointerExit(PointerEventData eventData)
     {
         _controller.CardAnimation.SelectAnim(false);
-        _rectpos.localScale /= _cardPickSize;
+        _rectpos.localScale = _localScale;
     }
 
     private void OnDestroy()
