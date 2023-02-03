@@ -21,6 +21,8 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     private ReactiveCollection<CardBaseClass> _handCardList = new();
     [Tooltip("山札のカードリスト")]
     [SerializeField] private List<CardBaseClass> _deckCardList = new();
+    [Tooltip("捨て札を貯めておくList")]
+    private List<CardBaseClass> _discardedCard = new();
 
     public override void Init()
     {
@@ -60,9 +62,24 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     /// <summary>
     /// カードをドローする
     /// </summary>
-    public void DrowCard()
+    public void DrawCard()
     {
-        _handCardList.Add(_deckCardList[0]);
-        //_deckCardList.RemoveAt(0);
+        if (_deckCardList.Count != 0)
+        {
+            _handCardList.Add(_deckCardList[0]);
+            _discardedCard.Add(_deckCardList[0]);
+            _deckCardList.RemoveAt(0);
+        }
+        else 
+        {
+            //Drawするカードがなくなった時捨て札を山札に戻す
+            _deckCardList = new List<CardBaseClass>(_discardedCard);
+           _discardedCard.Clear();
+
+           _handCardList.Add(_deckCardList[0]);
+            _discardedCard.Add(_deckCardList[0]);
+           _deckCardList.RemoveAt(0);
+            Debug.Log("カードを戻した");
+        }
     }
 }
