@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -41,12 +40,12 @@ public class CardBaseClass : ScriptableObject
     /// <summary>
     /// 設定されたカードの効果を使う
     /// </summary>
-    public void UseEffect(TargetType Target) 
+    public void UseEffect(PlayerController playCon, EnemyController enemyCon, TargetType Target) 
     {
         //カードに設定した効果を順に発動
         for (int i = 0; i < _effect.Count; i++) 
         {
-            _effect[i].CardEffect.UseEffect(_effect[i].Power, Tartget);
+            _effect[i].CardEffect.UseEffect(playCon, enemyCon, _effect[i].Power, Tartget);
         }
     }
 }
