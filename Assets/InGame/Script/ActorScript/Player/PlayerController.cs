@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
 
     [SerializeField] private PlayerStatus _playerStatus = new();
     [SerializeField] private PlayerAnim _playerAnim = new();
+    [SerializeField] private GameObject _playerDownPrefab;
+    
 
     private void Awake()
     {
@@ -18,15 +20,23 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
     /// ƒ_ƒ[ƒW‚ğó‚¯‚éˆ—
     /// </summary>
     /// <param name="damage"></param>
-    public void AddDamage(float damage) 
+    public void AddDamage(float damage)
     {
-        _playerStatus.ChangeValueHealth(_playerStatus.CurrentHpNum - damage);
-        _playerAnim.DamageAnim();
+        if (0 <= _playerStatus.CurrentHpNum - damage)
+        {
+            _playerStatus.ChangeValueHealth(_playerStatus.CurrentHpNum - damage);
+            _playerAnim.DamageAnim();
+        }
+        else 
+        {
+            _playerAnim.DownAnim();
+           
+        }
     }
 
-    public void DrowCard() 
+    public void DrawCard()
     {
-        _playerStatus.DrowCard();
+        _playerStatus.DrawCard();
     }
 
     public bool UseCost(float useCost)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour, IReceiveEnemyEffect
+public class EnemyController : MonoBehaviour
 {
     public EnemyStatus EnemyStatus => _enemyStatus;
 
@@ -21,21 +21,30 @@ public class EnemyController : MonoBehaviour, IReceiveEnemyEffect
     /// <param name="damage"></param>
     public void AddDamage(float damage)
     {
-        _enemyStatus.ChangeValueHealth(_enemyStatus.CurrentHpNum - damage);
-        _enemyAnim.DamageAnim();
+        if (0 < _enemyStatus.CurrentHpNum - damage)
+        {
+            _enemyStatus.ChangeValueHealth(_enemyStatus.CurrentHpNum - damage);
+            _enemyAnim.DamageAnim();
+        }
+        else 
+        {
+            _enemyAnim.DownAnim();
+            
+        }
+        
     }
 
     /// <summary>
     /// 攻撃に関する一連の流れ
     /// </summary>
-    public void Attack()
+    public void Attack(PlayerController player)
     {
-        _enemyStatus.AttackDecision(this);
+        _enemyStatus.AttackDecision();
 
         //攻撃の回数分メソッドを呼ぶ
         for (int i = 0; i < _enemyStatus.EnemyTurnEffect.Count; i++) 
         {
-            _enemyAttack.AttackEffect(_enemyStatus.EnemyTurnEffect[i]);
+            _enemyAttack.AttackEffect(player, this, _enemyStatus.EnemyTurnEffect[i]);
             _enemyAnim.AttackAnim();
         }
         

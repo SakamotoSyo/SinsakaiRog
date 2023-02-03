@@ -10,7 +10,7 @@ public class DrawState : State
     protected override async void OnEnter(State currentState)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-        FieldTest.PlayerReceiveEffect.DrowCard();
+        Owner.PlayerController.DrawCard();
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         StateMachine.Dispatch((int)BattleStateManager.BattleEvent.PlayerAttack);
     }

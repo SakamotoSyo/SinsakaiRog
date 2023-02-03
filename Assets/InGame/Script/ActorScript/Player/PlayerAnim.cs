@@ -19,4 +19,9 @@ public class PlayerAnim
     {
         _playerAnim.SetTrigger(_attackParm);
     }
+
+    public void DownAnim() 
+    {
+
+    }
 }

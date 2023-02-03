@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 using State = StateMachine<BattleStateManager>.State;
 
 public class BattleStateManager : MonoBehaviour
 {
+    public PlayerController PlayerController => _playerCon;
+    public EnemyController EnemyController => _enemyCon;
+
     [SerializeField] private Text _debugText;
+    [SerializeField] private ActorGenerator _generator;
     private StateMachine<BattleStateManager> _stateMachine;
+    private PlayerController _playerCon;
+    private EnemyController _enemyCon;
 
     public enum BattleEvent 
     {
@@ -19,6 +26,8 @@ public class BattleStateManager : MonoBehaviour
 
     void Start()
     {
+        _playerCon = _generator.PlayerController;
+        _enemyCon = _generator.EnemyController;
         _stateMachine = new StateMachine<BattleStateManager>(this);
         _stateMachine.AddTransition<DrawState, PlayerAttackState>((int)BattleEvent.PlayerAttack);
         _stateMachine.AddTransition<PlayerAttackState, EnemyAttackState>((int)BattleEvent.EnemyAttack);
@@ -26,6 +35,7 @@ public class BattleStateManager : MonoBehaviour
         _stateMachine.AddAnyTranstion<BattleResultState>((int)BattleEvent.BattleResult);
         //一番最初のステートを始める
         _stateMachine.Start<DrawState>();
+        _enemyCon.EnemyStatus.CurrentHp.Subscribe(ToBattleResult).AddTo(this);
     }
 
     void Update()
@@ -44,5 +54,10 @@ public class BattleStateManager : MonoBehaviour
         {
             _stateMachine.Dispatch((int)BattleEvent.EnemyAttack);
         }
+    }
+
+    public void ToBattleResult(float value) 
+    {
+        
     }
 }

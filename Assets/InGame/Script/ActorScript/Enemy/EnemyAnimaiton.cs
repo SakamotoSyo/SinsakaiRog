@@ -26,4 +26,9 @@ public class EnemyAnimaiton
     {
         _enemyAnim.SetTrigger(_attackParm);
     }
+
+    public void DownAnim() 
+    {
+
+    }
 }
