@@ -41,7 +41,12 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
 
     public bool UseCost(float useCost)
     {
-        return _playerStatus.UseCost(useCost);
+        if (_playerStatus.UseCost(useCost)) 
+        {
+            _playerAnim.AttackAnim();
+            return true;
+        }
+        return false;
     }
 
     public void ResetCost()
