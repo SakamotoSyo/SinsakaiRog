@@ -11,6 +11,7 @@ public class EnemyAttack
     /// <param name="enemyStatus"></param>
     public void AttackEffect(PlayerController playCon,EnemyController enemyCon, EnemyEffectData enemyTurnEffect)
     {
-        enemyTurnEffect.EnemyEffect.UseEffect(playCon, enemyCon, enemyTurnEffect.EffectPower, enemyTurnEffect.Target);
+        Debug.Log(enemyTurnEffect.EffectPower);
+        enemyTurnEffect.EnemyEffect.UseEffect(playCon, enemyCon, Mathf.Floor(enemyTurnEffect.EffectPower), enemyTurnEffect.Target);
     }
 }
