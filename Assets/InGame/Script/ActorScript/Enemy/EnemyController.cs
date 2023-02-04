@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
-        _enemyStatus.Init();
+        
     }
 
     /// <summary>
@@ -26,12 +26,11 @@ public class EnemyController : MonoBehaviour
             _enemyStatus.ChangeValueHealth(_enemyStatus.CurrentHpNum - damage);
             _enemyAnim.DamageAnim();
         }
-        else 
+        else
         {
+            _enemyStatus.ChangeValueHealth(0);
             _enemyAnim.DownAnim();
-            
         }
-        
     }
 
     /// <summary>
@@ -42,11 +41,12 @@ public class EnemyController : MonoBehaviour
         _enemyStatus.AttackDecision();
 
         //UŒ‚‚Ì‰ñ”•ªƒƒ\ƒbƒh‚ğŒÄ‚Ô
-        for (int i = 0; i < _enemyStatus.EnemyTurnEffect.Count; i++) 
+        for (int i = 0; i < _enemyStatus.EnemyTurnEffect.Count; i++)
         {
             _enemyAttack.AttackEffect(player, this, _enemyStatus.EnemyTurnEffect[i]);
             _enemyAnim.AttackAnim();
         }
-        
+
+        _enemyStatus.AttackDecisionReset();
     }
 }
