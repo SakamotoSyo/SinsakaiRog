@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
@@ -9,8 +8,9 @@ public class BattleStateManager : MonoBehaviour
 {
     public PlayerController PlayerController => _playerCon;
     public EnemyController EnemyController => _enemyCon;
+    public BattleStateView BattleStateView => _battleStateView;
 
-    [SerializeField] private Text _debugText;
+    [SerializeField] private BattleStateView _battleStateView;
     [SerializeField] private ActorGenerator _generator;
     private StateMachine<BattleStateManager> _stateMachine;
     private PlayerController _playerCon;
@@ -41,13 +41,10 @@ public class BattleStateManager : MonoBehaviour
     void Update()
     {
         _stateMachine.Update();
-        _debugText.text = _stateMachine.CurrentState.ToString();
+        _battleStateView.DebugTurnText(_stateMachine.CurrentState.ToString());
     }
 
-    /// <summary>
-    ///敵の攻撃ターンに遷移させる
-    /// ボタンで呼び出す函数。
-    /// </summary>
+    
     public void BattleTrunEnd() 
     {
        if(_stateMachine.CurrentState == _stateMachine.GetOrAddState<PlayerAttackState>()) 
@@ -58,6 +55,9 @@ public class BattleStateManager : MonoBehaviour
 
     public void ToBattleResult(float value) 
     {
-        
+        if (value <= 0) 
+        {
+            _stateMachine.Dispatch((int)BattleEvent.BattleResult);
+        }
     }
 }
