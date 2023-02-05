@@ -4,31 +4,14 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class EnemyAnimaiton
+public class EnemyAnimaiton : ActorAnimBase
 {
-    [AnimationParameter]
-    [SerializeField] private string _damageParm; 
-    [AnimationParameter]
-    [SerializeField] private string _attackParm;
-    [SerializeField] private Animator _enemyAnim;
     [SerializeField] private Animator _effectAnim;
 
-    /// <summary>
-    /// ダメージAnimationをスタートする
-    /// </summary>
-    public void DamageAnim() 
+
+    public override void DamageAnim()
     {
-        _enemyAnim.SetTrigger(_damageParm);
+        base.DamageAnim();
         _effectAnim.SetTrigger("AttackEffect");
-    }
-
-    public void AttackAnim() 
-    {
-        _enemyAnim.SetTrigger(_attackParm);
-    }
-
-    public void DownAnim() 
-    {
-
     }
 }
