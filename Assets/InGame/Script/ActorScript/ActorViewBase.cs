@@ -5,10 +5,20 @@ using UnityEngine.UI;
 
 public class ActorViewBase : MonoBehaviour
 {
+    [SerializeField] private GameObject _defenceObj;
     [Header("HpのRectTransform")]
     [SerializeField] protected RectTransform _rectCurrent;
+    [SerializeField] protected Image _hpImage;
+    [SerializeField] protected Image _hpOutLineImage;
+    #region Color
+    [SerializeField] protected Color _hpDefaultColor;
+    [SerializeField] protected Color _hpOutLineDefaultColor;
+    [SerializeField] protected Color _hpDefenceColor;
+    [SerializeField] protected Color _hpOutLineDefenceColor;
+    #endregion
     [SerializeField] private Text _maxHpText;
     [SerializeField] private Text _currentHpText;
+    [SerializeField] private Text _defenceText;
     [Tooltip("Hpバー最長の長さ")]
     private float _maxHpWidth;
     [Tooltip("Hpバーの最大値")]
@@ -34,6 +44,28 @@ public class ActorViewBase : MonoBehaviour
         {
 
         }
+    }
+
+    /// <summary>
+    /// 防御が変わった時の処理
+    /// </summary>
+    /// <param name="num"></param>
+    public virtual void SetDefense(float num) 
+    {
+        if (0 < num)
+        {
+            _defenceObj.SetActive(true);
+            _defenceText.text = num.ToString("0");
+            _hpImage.color = _hpDefenceColor;
+            _hpOutLineImage.color = _hpOutLineDefenceColor;
+        }
+        else 
+        {
+            _defenceObj.SetActive(false);
+            _hpImage.color = _hpDefaultColor;
+            _hpOutLineImage.color = _hpOutLineDefaultColor;
+        }
+        
     }
 
     protected float GetWidth(float value)

@@ -30,10 +30,9 @@ public class PlayerView : ActorViewBase
         cardController.CardAnimation.SetParentTransform(_cardParentObj.transform);
         cardController.SetCardBaseClass(card);
     }
-
     public void DiscardedCardView(int count) 
     {
-        _discardedText.text = count.ToString();
+       _discardedText.text = count.ToString();
     }
 
     public void DeckCardView(int count) 

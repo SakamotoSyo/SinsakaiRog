@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
     }
 
     /// <summary>
-    /// ダメージを受ける処理
+    /// ダメージを受ける処理の流れ
     /// </summary>
     /// <param name="damage"></param>
     public void AddDamage(float damage)
@@ -33,6 +33,13 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
            
         }
     }
+
+    public void DefenseIncrease(float num) 
+    {
+        //Animationから先に
+        _playerAnim.ActiveDefence();
+        _playerStatus.DefenseIncrease(num);
+    }  
 
     public void DrawCard()
     {

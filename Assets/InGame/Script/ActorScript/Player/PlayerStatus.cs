@@ -62,6 +62,11 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
     }
 
+    public void DefenseIncrease(float num) 
+    {
+        _defense.Value += num;
+    }
+
     /// <summary>
     /// カードをドローする
     /// </summary>
