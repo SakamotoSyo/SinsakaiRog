@@ -22,9 +22,9 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
     /// <param name="damage"></param>
     public void AddDamage(float damage)
     {
-        if (0 <= _playerStatus.CurrentHpNum - damage)
+        if (0 <= _playerStatus.CurrentHpNum + _playerStatus.DefenceNum - damage)
         {
-            _playerStatus.ChangeValueHealth(_playerStatus.CurrentHpNum - damage);
+            _playerStatus.AddDamage(damage);
             _playerAnim.DamageAnim();
         }
         else 
@@ -36,21 +36,22 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
 
     public void DefenseIncrease(float num) 
     {
-        //Animation‚©‚çæ‚É
-        _playerAnim.ActiveDefence();
+        if (_playerStatus.DefenceNum <= 0) 
+        {
+            _playerAnim.ActiveDefence();
+        }
         _playerStatus.DefenseIncrease(num);
     }  
 
-    public void DrawCard()
+    public void DrawCard(float num = 1)
     {
-        _playerStatus.DrawCard();
+        _playerStatus.DrawCard(num);
     }
 
     public bool UseCost(float useCost)
     {
         if (_playerStatus.UseCost(useCost)) 
         {
-            _playerAnim.AttackAnim();
             return true;
         }
         return false;
