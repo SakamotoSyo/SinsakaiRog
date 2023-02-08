@@ -15,17 +15,29 @@ public class CardBaseClass : ScriptableObject
     public float CardCost => _cardCost;
     private float _cardCost;
     public TargetType Tartget => _target;
-    private TargetType _target;
+    [SerializeField] private TargetType _target;
     public string CardDescription => _cardDescription;
     [Tooltip("ƒJ[ƒh‚ÉŠÖ‚·‚éà–¾")]
     private string _cardDescription;
     public Sprite CardSprite => _cardSprite;
-    private Sprite _cardSprite;
+    [SerializeField] private Sprite _cardSprite;
     
     [SerializeField] List<EffectData> _effect = new List<EffectData>();
 
 
     public CardBaseClass(int id, string name, float defence, string target, float cost, string Description, Sprite sp, List<EffectData> effectBase)
+    {
+        _id = id;
+        _cardDefence = defence;
+        _cardCost = cost;
+        _target = Enum.Parse<TargetType>(target);
+        _cardDescription = Description;
+        _name = name;
+        _cardSprite = sp;
+        _effect = effectBase;
+    }   
+    
+    public void Init(int id, string name, float defence, string target, float cost, string Description, Sprite sp, List<EffectData> effectBase)
     {
         _id = id;
         _cardDefence = defence;
@@ -51,12 +63,13 @@ public class CardBaseClass : ScriptableObject
 }
 
 [System.Serializable]
-public struct EffectData
+public class EffectData
 {
     public IEffect CardEffect => _effect;
+    [SerializeReference,SubclassSelector]
     private IEffect _effect;
     public float Power => _power;
-    private float _power;
+    [SerializeField] private float _power;
 
     public EffectData(IEffect effect, float power) 
     {

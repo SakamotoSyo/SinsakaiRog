@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using System;
+
 
 public class CardController : MonoBehaviour
 {
@@ -31,8 +33,9 @@ public class CardController : MonoBehaviour
         
     }
 
-    public void SetCardBaseClass(CardBaseClass card) 
+    public async void SetCardBaseClass(CardBaseClass card) 
     {
+        await UniTask.Delay(TimeSpan.FromSeconds(0.2));
         _cardBaseClass.Value = card;
     }
 }
