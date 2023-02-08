@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public EnemyStatus EnemyStatus => _enemyStatus;
+    public IEnemyStatus EnemyStatus => _enemyStatus;
 
     [SerializeField] private EnemyAnimaiton _enemyAnim = new();
-    [SerializeField] private EnemyStatus _enemyStatus = new();
     private EnemyAttack _enemyAttack = new();
+    private IEnemyStatus _enemyStatus;
+    private IStatusBase _statusBase;
 
-    private void Awake()
+    private void Start()
     {
-        
+        _enemyStatus = EnemyStatusPresenter.EnemyStatus;
+        _statusBase = _enemyStatus.GetStatusBase();
+        _enemyStatus.StatusSet(DataBaseScript.EnemyData[0]);
     }
 
     /// <summary>
@@ -21,14 +24,14 @@ public class EnemyController : MonoBehaviour
     /// <param name="damage"></param>
     public void AddDamage(float damage)
     {
-        if (0 < _enemyStatus.CurrentHpNum + _enemyStatus.DefenceNum - damage)
+        if (_statusBase.DownJudge(damage))
         {
-            _enemyStatus.AddDamage(damage);
+            _statusBase.AddDamage(damage);
             _enemyAnim.DamageAnim();
         }
         else
         {
-            _enemyStatus.ChangeValueHealth(0);
+            _statusBase.AddDamage(damage);
             _enemyAnim.DownAnim();
         }
     }
@@ -36,7 +39,7 @@ public class EnemyController : MonoBehaviour
     public void DefenseIncrease(float num)
     {
         _enemyAnim.ActiveDefence();
-        _enemyStatus.DefenseIncrease(num);
+        _statusBase.DefenseIncrease(num);
     }
 
     /// <summary>
@@ -45,9 +48,9 @@ public class EnemyController : MonoBehaviour
     public void Attack(PlayerController player)
     {
         //UŒ‚‚Ì‰ñ”•ªƒƒ\ƒbƒh‚ğŒÄ‚Ô
-        for (int i = 0; i < _enemyStatus.EnemyTurnEffect.Count; i++)
+        for (int i = 0; i < _enemyStatus.GetEnemyTurnEffectOb().Count; i++)
         {
-            _enemyAttack.AttackEffect(player, this, _enemyStatus.EnemyTurnEffect[i]);
+            _enemyAttack.AttackEffect(player, this, _enemyStatus.GetEnemyTurnEffectOb()[i]);
             _enemyAnim.AttackAnim();
         }
 

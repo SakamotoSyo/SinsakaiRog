@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UniRx;
+using VContainer;
+using VContainer.Unity;
 
-[Serializable]
-public class EnemyStatus : StatusModelBase
+public class EnemyStatus : StatusModelBase, IEnemyStatus
 {
     [Tooltip("行動する回数")]
     private int _actionNum = 1;
 
-    //TODO: データの注入方法を考える現状だとSerializeField
     [Tooltip("行動パターン")]
-    public List<EnemyEffectData> EnemyStatusList => _effectDataList;
-    [SerializeField] private List<EnemyEffectData> _effectDataList = new List<EnemyEffectData>();
-    public List<EnemyEffectData> EnemyTurnEffect => _enemyTurnEffect;
+    private List<EnemyEffectData> _effectDataList = new List<EnemyEffectData>();
+    public IReactiveCollection<EnemyEffectData> EnemyTurnEffect => _enemyTurnEffect;
     [Tooltip("１ターンの間にやる行動")]
-    private List<EnemyEffectData> _enemyTurnEffect = new List<EnemyEffectData>();
+    private ReactiveCollection<EnemyEffectData> _enemyTurnEffect = new ReactiveCollection<EnemyEffectData>();
 
     public override void Init()
     {
@@ -22,7 +22,7 @@ public class EnemyStatus : StatusModelBase
     }
 
     /// <summary>
-    /// 敵に関するStatusの情報をここでセットする
+    /// 階層が進んだことによるStatus補正をかける
     /// </summary>
     /// <param name="enemy"></param>
     public void StatusSet(EnemyStatusData enemy)
@@ -50,7 +50,20 @@ public class EnemyStatus : StatusModelBase
 
     public void AttackDecisionReset() 
     {
-        _enemyTurnEffect.Clear();
+        for (int i = 0; i < _enemyTurnEffect.Count; i++) 
+        {
+            _enemyTurnEffect.RemoveAt(0);
+        }
+    }
+
+    public IStatusBase GetStatusBase()
+    {
+        return this;
+    }
+
+    public IReactiveCollection<EnemyEffectData> GetEnemyTurnEffectOb()
+    {
+        return _enemyTurnEffect;
     }
 }
 
@@ -80,18 +93,21 @@ public class EnemyEffectData
     public TargetType Target => _targetType;
     [SerializeField] private TargetType _targetType;
 
+    public EffectTypeImage ImageType => _imageType;
+    [SerializeField] private EffectTypeImage _imageType;
+
     public float EffectPower => _effectPower;
     [SerializeField] private float _effectPower;
-    public EnemyEffectData(IEffect effect, TargetType target, float power)
+    public EnemyEffectData(IEffect effect, TargetType target, EffectTypeImage image, float power)
     {
         _enemyEffect = effect;
         _targetType = target;
+        _imageType = image;
         _effectPower = power;
     }
 
     public void EffectPowerMultiplication(float value) 
     {
         _effectPower *= value;
-        Debug.Log(_effectPower);
     }
 }
