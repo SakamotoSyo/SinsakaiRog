@@ -41,7 +41,7 @@ public class DataBaseScript : MonoBehaviour
         sr.ReadLine();
 
         //TODO:ƒf[ƒ^‚Ì”‚¾‚¯for‚ªü‚è‚æ‚¤‚É‚·‚é
-        for (int i = 0; i < 1; i++) 
+        for (int i = 0; i < 3; i++) 
         {
             string line = sr.ReadLine();
 
@@ -95,7 +95,8 @@ public class DataBaseScript : MonoBehaviour
             for (int j = 3; j < parts.Length; j++) 
             {
                 var effect = parts[j].Split('_');
-                enemyEffectDatas.Add(new EnemyEffectData(MakeClass<IEffect>(effect[0]), Enum.Parse<TargetType>(effect[1]), float.Parse(effect[2])));
+                Debug.Log(Enum.Parse<EffectTypeImage>(effect[3]));
+                enemyEffectDatas.Add(new EnemyEffectData(MakeClass<IEffect>(effect[0]), Enum.Parse<TargetType>(effect[1]), Enum.Parse<EffectTypeImage>(effect[3]), float.Parse(effect[2])));
             }
             EnemyStatusData enemyStatusData = new EnemyStatusData(parts[0], MaxHp, BaseLevel, enemyEffectDatas);
 
@@ -143,4 +144,6 @@ public class SpriteData
 public enum ImageType 
 {
     Slash,
+    Defence,
+    Draw,
 }
