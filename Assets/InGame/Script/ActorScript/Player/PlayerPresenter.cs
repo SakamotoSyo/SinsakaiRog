@@ -1,29 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using VContainer.Unity;
+using VContainer;
+using System;
 
-public class PlayerPresenter : MonoBehaviour
+public class PlayerPresenter : IStartable, IDisposable
 {
-    [SerializeField] private PlayerController _controller;
-    [SerializeField] private PlayerView _playerView;
-    private PlayerStatus _playerStauts;
+    private PlayerView _playerView;
+    public static IPlayerStatus PlayerStatus => _playerStauts;
+    private static IPlayerStatus _playerStauts;
+    private CompositeDisposable _compositeDisposable = new();
 
-    void Start()
+    [Inject]
+    public PlayerPresenter(PlayerView playerView, IPlayerStatus playerStatus) 
     {
-        _playerStauts = _controller.PlayerStatus;
-        _playerStauts.HandCardList.ObserveAdd().Subscribe(x => _playerView.DrawView(x.Value)).AddTo(this);
-        _playerStauts.DiscardedCount.ObserveCountChanged().Subscribe(_playerView.DiscardedCardView).AddTo(this);
-        _playerStauts.DeckCardList.ObserveCountChanged().Subscribe(_playerView.DeckCardView).AddTo(this);
-        _playerStauts.Defense.Subscribe(_playerView.SetDefense).AddTo(this);
-        _playerStauts.CostOb.Subscribe(_playerView.SetCost).AddTo(this);
-        _playerStauts.MaxHp.Subscribe(_playerView.MaxHpSet).AddTo(this);
-        _playerStauts.CurrentHp.Subscribe(_playerView.SetHpCurrent).AddTo(this);
+        _playerView = playerView;
+        _playerStauts = playerStatus;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Start()
     {
-        
+        _playerStauts.GetHandCardListOb().ObserveAdd().Subscribe(x => _playerView.DrawView(x.Value)).AddTo(_compositeDisposable);
+        _playerStauts.GetDiscardedCountOb().ObserveCountChanged().Subscribe(_playerView.DiscardedCardView).AddTo(_compositeDisposable);
+        _playerStauts.GetDeckCardListOb().ObserveCountChanged().Subscribe(_playerView.DeckCardView).AddTo(_compositeDisposable);
+        _playerStauts.GetStatusBase().GetDefeceOb().Subscribe(_playerView.SetDefense).AddTo(_compositeDisposable);
+        _playerStauts.GetCostOb().Subscribe(_playerView.SetCostText).AddTo(_compositeDisposable);
+        _playerStauts.GetStatusBase().GetMaxHpOb().Subscribe(_playerView.MaxHpSet).AddTo(_compositeDisposable);
+        _playerStauts.GetStatusBase().GetCurrentHpOb().Subscribe(_playerView.SetHpCurrent).AddTo(_compositeDisposable);
+    }
+
+    public void Dispose()
+    {
+        _compositeDisposable.Dispose();
     }
 }
+

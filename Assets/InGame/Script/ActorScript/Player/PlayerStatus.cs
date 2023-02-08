@@ -2,22 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
+using VContainer.Unity;
+using VContainer;
 
 
 [Serializable]
 public class PlayerStatus : StatusModelBase, IPlayerStatus
 {
-    public float MaxCost => _maxCost;
-    public float Cost => _cost.Value;
-    public IObservable<float> CostOb => _cost;
-    public IReactiveCollection<CardBaseClass> DiscardedCount => _discardedCard;
-    public IReactiveCollection<CardBaseClass> HandCardList => _handCardList;
-    public IReactiveCollection<CardBaseClass> DeckCardList => _deckCardList;
-
-
     [SerializeField] private float _maxCost;
     [Tooltip("カードに使用の際に必要なコスト")]
     private ReactiveProperty<float> _cost = new();
+    private ReactiveProperty<float> _gold = new();
     [Tooltip("手札のカードリスト")]
     private ReactiveCollection<CardBaseClass> _handCardList = new();
     [Tooltip("山札のカードリスト")]
@@ -27,11 +22,65 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     [Tooltip("捨て札を貯めておくList")]
     private ReactiveCollection<CardBaseClass> _discardedCard = new();
 
+    [Inject]
+    public PlayerStatus() 
+    {
+        Init();
+    }
+
     public override void Init()
     {
         base.Init();
-        _deckCardList = new ReactiveCollection<CardBaseClass>(_deckCopyList);
+        _maxCost = 3;
+        _deckCardList.Add(DataBaseScript.CardBaseClassList[2]);
+        for (int i = 0; i < 4; i++) 
+        {
+            _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
+            _deckCardList.Add(DataBaseScript.CardBaseClassList[1]);
+        }
+        //_deckCardList = new ReactiveCollection<CardBaseClass>(DataBaseScript.CardBaseClassList);
+        //_deckCardList = new ReactiveCollection<CardBaseClass>(_deckCopyList);
         _cost.Value = _maxCost;
+    }
+
+    /// <summary>
+    /// カードをドローする
+    /// </summary>
+    public void DrawCard(float num = 1)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            if (_deckCardList.Count == 0 && _discardedCard.Count != 0)
+            {
+                //Drawするカードがなくなった時捨て札を山札に戻す
+                for (int j = 0; j < _discardedCard.Count; j++)
+                {
+                    _deckCardList.Add(_discardedCard[j]);
+                }
+                _discardedCard.Clear();
+                _handCardList.Add(_deckCardList[0]);
+                _deckCardList.RemoveAt(0);
+                Debug.Log(_deckCardList.Count);
+            }
+            else if (_deckCardList.Count == 0 && _discardedCard.Count == 0)
+            {
+                Debug.LogWarning("山札に戻すカードはありません");
+            }
+            else
+            {
+                _handCardList.Add(_deckCardList[0]);
+                _deckCardList.RemoveAt(0);
+            }
+        }
+    }
+
+    /// <summary>
+    /// カードを捨て札に加える処理
+    /// </summary>
+    /// <param name="cardBase"></param>
+    public void DiscardedCardAdd(CardBaseClass cardBase) 
+    {
+        _discardedCard.Add(cardBase);
     }
 
     /// <summary>
@@ -53,54 +102,41 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         _cost.Value = _maxCost;
     }
 
-    /// <summary>
-    /// DataBaseからランダムにカードを追加する
-    /// </summary>
-    /// <param name="value"></param>
-    public void TestAddCardList()
+
+    public void AddGold(float gold)
     {
-        _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
+        _gold.Value += gold;
     }
 
-    public void DefenseIncrease(float num) 
+    public void UseGold(float gold)
     {
-        _defense.Value += num;
+        _gold.Value -= gold;
     }
 
-    /// <summary>
-    /// カードをドローする
-    /// </summary>
-    public void DrawCard()
+    #region　Get関数
+
+    public IObservable<float> GetCostOb()
     {
-        if (_deckCardList.Count == 0 && _discardedCard.Count != 0)
-        {
-            //Drawするカードがなくなった時捨て札を山札に戻す
-            for (int i = 0; i < _discardedCard.Count; i++) 
-            {
-                _deckCardList.Add(_discardedCard[i]);
-            }
-            _discardedCard.Clear();
-            _handCardList.Add(_deckCardList[0]);
-            _deckCardList.RemoveAt(0);
-            Debug.Log(_deckCardList.Count);
-        }
-        else if (_deckCardList.Count == 0 && _discardedCard.Count == 0)
-        {
-            Debug.LogWarning("山札に戻すカードはありません");
-        }
-        else 
-        {
-            _handCardList.Add(_deckCardList[0]);
-            _deckCardList.RemoveAt(0);
-        }
+        return _cost;
     }
 
-    /// <summary>
-    /// カードを捨て札に加える処理
-    /// </summary>
-    /// <param name="cardBase"></param>
-    public void DiscardedCardAdd(CardBaseClass cardBase) 
+    public IReactiveCollection<CardBaseClass> GetHandCardListOb()
     {
-        _discardedCard.Add(cardBase);
+        return _handCardList;
     }
+
+    public IReactiveCollection<CardBaseClass> GetDiscardedCountOb()
+    {
+        return _discardedCard;
+    }
+
+    public IReactiveCollection<CardBaseClass> GetDeckCardListOb()
+    {
+        return _deckCardList;
+    }
+    public IStatusBase GetStatusBase()
+    {
+        return this;
+    }
+    #endregion
 }

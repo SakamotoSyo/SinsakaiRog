@@ -40,7 +40,7 @@ public class PlayerView : ActorViewBase
         _deckText.text = count.ToString();
     }
 
-    public void SetCost(float cost) 
+    public void SetCostText(float cost) 
     {
         _costText.text = cost.ToString();
     }

@@ -2,18 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IReceivePlayerEffect
+public class PlayerController : MonoBehaviour
 {
-    public PlayerStatus PlayerStatus => _playerStatus;
+    public IPlayerStatus PlayerStatus => _playerStatus;
 
-    [SerializeField] private PlayerStatus _playerStatus = new();
+    private IPlayerStatus _playerStatus;
     [SerializeField] private PlayerAnim _playerAnim = new();
     [SerializeField] private GameObject _playerDownPrefab;
-    
+    //TODO:QÆ‚ÍIplayerStatus‚©‚ç‚Á‚Ä‚­‚é;
+    private IStatusBase _statusBase;
 
-    private void Awake()
+    private void Start()
     {
-        _playerStatus.Init();
+        _playerStatus = PlayerPresenter.PlayerStatus;
+        _statusBase = _playerStatus.GetStatusBase();
     }
 
     /// <summary>
@@ -22,9 +24,9 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
     /// <param name="damage"></param>
     public void AddDamage(float damage)
     {
-        if (0 <= _playerStatus.CurrentHpNum + _playerStatus.DefenceNum - damage)
+        if (_statusBase.DownJudge(damage))
         {
-            _playerStatus.AddDamage(damage);
+            _statusBase.AddDamage(damage);
             _playerAnim.DamageAnim();
         }
         else 
@@ -36,11 +38,11 @@ public class PlayerController : MonoBehaviour, IReceivePlayerEffect
 
     public void DefenseIncrease(float num) 
     {
-        if (_playerStatus.DefenceNum <= 0) 
+        if (_statusBase.GetDefenceNum() <= 0) 
         {
             _playerAnim.ActiveDefence();
         }
-        _playerStatus.DefenseIncrease(num);
+        _statusBase.DefenseIncrease(num);
     }  
 
     public void DrawCard(float num = 1)
