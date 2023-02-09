@@ -6,22 +6,25 @@ using System;
 
 public class DataBaseScript : MonoBehaviour
 {
+    public static List<CardBaseClass> CardBaseClassList => _cardList;
+    public static List<EnemyStatusData> EnemyData => _enemyStatusData;
+    public static float BasicReWardGold => _basicReWardGold;
+    [Tooltip("階層による倍率")]
+    public const float EFFECT_MAGNIFICATION = 0.1f;
+
     //TODO:鈴木先生のScriptを見て後々変更を絶対に入れる
     [Header("カードのテキストデータ")]
     [SerializeField] private TextAsset _cardData;
     [Header("敵のステータスデータ")]
     [SerializeField] private TextAsset _enemyData;
     [Header("カードのSpriteデータ")]
-    [SerializeField] private List<SpriteData> _cardSprite = new();
+    [SerializeField] private List<CardSpriteData> _cardSprite = new();
     [Tooltip("階層によって敵にかかる倍率")]
-    public const float EFFECT_MAGNIFICATION = 1.1f;
-    public static List<EnemyStatusData> EnemyData => _enemyStatusData;
     private static List<EnemyStatusData> _enemyStatusData = new(); 
-    public static List<CardBaseClass> CardBaseClassList => _cardList;
-    [Header("カードのデータ")]
     private static List<CardBaseClass> _cardList = new();
-
-    readonly int _floatLoopNum = 2;
+    private readonly int _floatLoopNum = 2;
+    [Tooltip("報酬のベースとなるゴールド")]
+    private static int _basicReWardGold = 20;
 
     public void Init()
     {
@@ -131,7 +134,7 @@ public class DataBaseScript : MonoBehaviour
 }
 
 [Serializable]
-public class SpriteData 
+public class CardSpriteData 
 {
     public Sprite CardSprite => _cardSprite;
     [SerializeField] private 
