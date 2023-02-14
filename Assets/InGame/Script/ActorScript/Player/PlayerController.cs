@@ -50,6 +50,14 @@ public class PlayerController : MonoBehaviour
         _playerStatus.DrawCard(num);
     }
 
+    /// <summary>
+    /// ゴールドをゲットする一連の流れの処理
+    /// </summary>
+    public void AddReWardGold(float gold) 
+    {
+        _playerStatus.AddGold(gold);
+    }
+
     public bool UseCost(float useCost)
     {
         if (_playerStatus.UseCost(useCost)) 
