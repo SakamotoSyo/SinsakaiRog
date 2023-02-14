@@ -18,7 +18,7 @@ public abstract class StatusModelBase : IStatusBase
     {
         //ToDo:ここはデバック用に数値を与えている
         _maxHp.Value = 100;
-        _currentHp.Value = 100; 
+        _currentHp.Value = 80; 
     }
 
     /// <summary>
@@ -56,13 +56,20 @@ public abstract class StatusModelBase : IStatusBase
 
         if (0 < num)
         {
-            _currentHp.Value -= num;
+            var hpNum = Mathf.Max(0, _currentHp.Value - num);
+            _currentHp.Value = hpNum;
             _defence.Value = 0;
         }
         else 
         {
            _defence.Value = num * -1;
         }
+    }
+
+    public virtual void Healing(float value) 
+    {
+        var healNum = Mathf.Min(_currentHp.Value + value, _maxHp.Value);
+        _currentHp.Value = healNum;
     }
 
     public void DefenseIncrease(float num)
@@ -92,7 +99,7 @@ public abstract class StatusModelBase : IStatusBase
     /// <returns></returns>
     public bool DownJudge(float damage)
     {
-        return 0 <= _currentHp.Value + _defence.Value - damage;
+        return 0 < _currentHp.Value + _defence.Value - damage;
     }
 
     public float GetDefenceNum()
