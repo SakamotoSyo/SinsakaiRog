@@ -20,20 +20,26 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     /// <summary>デバック用変数</summary>
     [SerializeField] private List<CardBaseClass> _deckCopyList = new();
     [Tooltip("捨て札を貯めておくList")]
-    private ReactiveCollection<CardBaseClass> _discardedCard = new();
+    private ReactiveCollection<CardBaseClass> _graveyardCards = new();
 
     [Inject]
     public PlayerStatus() 
     {
+        //GameManagerからDataを受け取る処理を書く
         Init();
     }
 
     public override void Init()
     {
         base.Init();
+
+    }
+
+    public void DeckInit() 
+    {
         _maxCost = 3;
         _deckCardList.Add(DataBaseScript.CardBaseClassList[2]);
-        for (int i = 0; i < 4; i++) 
+        for (int i = 0; i < 4; i++)
         {
             _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
             _deckCardList.Add(DataBaseScript.CardBaseClassList[1]);
@@ -50,19 +56,19 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     {
         for (int i = 0; i < num; i++)
         {
-            if (_deckCardList.Count == 0 && _discardedCard.Count != 0)
+            if (_deckCardList.Count == 0 && _graveyardCards.Count != 0)
             {
                 //Drawするカードがなくなった時捨て札を山札に戻す
-                for (int j = 0; j < _discardedCard.Count; j++)
+                for (int j = 0; j < _graveyardCards.Count; j++)
                 {
-                    _deckCardList.Add(_discardedCard[j]);
+                    _deckCardList.Add(_graveyardCards[j]);
                 }
-                _discardedCard.Clear();
+                _graveyardCards.Clear();
                 _handCardList.Add(_deckCardList[0]);
                 _deckCardList.RemoveAt(0);
                 Debug.Log(_deckCardList.Count);
             }
-            else if (_deckCardList.Count == 0 && _discardedCard.Count == 0)
+            else if (_deckCardList.Count == 0 && _graveyardCards.Count == 0)
             {
                 Debug.LogWarning("山札に戻すカードはありません");
             }
@@ -78,9 +84,9 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     /// カードを捨て札に加える処理
     /// </summary>
     /// <param name="cardBase"></param>
-    public void DiscardedCardAdd(CardBaseClass cardBase) 
+    public void GraveyardCardsAdd(CardBaseClass cardBase) 
     {
-        _discardedCard.Add(cardBase);
+        _graveyardCards.Add(cardBase);
     }
 
     /// <summary>
@@ -102,6 +108,14 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         _cost.Value = _maxCost;
     }
 
+    /// <summary>
+    /// デッキにカードを追加する
+    /// </summary>
+    /// <param name="cardBase">追加するカードの情報</param>
+    public void AddDeckCard(CardBaseClass cardBase) 
+    {
+        _deckCardList.Add(cardBase);
+    }
 
     public void AddGold(float gold)
     {
@@ -125,9 +139,9 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         return _handCardList;
     }
 
-    public IReactiveCollection<CardBaseClass> GetDiscardedCountOb()
+    public IReactiveCollection<CardBaseClass> GetGraveyardCardsCountOb()
     {
-        return _discardedCard;
+        return _graveyardCards;
     }
 
     public IReactiveCollection<CardBaseClass> GetDeckCardListOb()
