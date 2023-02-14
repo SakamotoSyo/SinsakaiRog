@@ -35,7 +35,7 @@ public class CardController : MonoBehaviour
 
     public async void SetCardBaseClass(CardBaseClass card) 
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(0.2));
+        await UniTask.Delay(TimeSpan.FromSeconds(0.01));
         _cardBaseClass.Value = card;
     }
 }

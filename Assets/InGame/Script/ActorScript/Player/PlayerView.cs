@@ -30,7 +30,7 @@ public class PlayerView : ActorViewBase
         cardController.CardAnimation.SetParentTransform(_cardParentObj.transform);
         cardController.SetCardBaseClass(card);
     }
-    public void DiscardedCardView(int count) 
+    public void GraveyardCardsView(int count) 
     {
        _discardedText.text = count.ToString();
     }
@@ -44,5 +44,4 @@ public class PlayerView : ActorViewBase
     {
         _costText.text = cost.ToString();
     }
-
 }

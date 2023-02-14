@@ -12,6 +12,7 @@ public class CardAnimation
     [SerializeField] private Vector3 _drawAnimOffSet;
     [SerializeField] private CardEvent _cardEvent;
     private Transform _parentTransform;
+    private Tween _tween;
 
     public void Init(Animator anim) 
     {
@@ -38,7 +39,7 @@ public class CardAnimation
 
     public void DrawAnim(Transform transform) 
     {
-        DOTween.To(() => transform.transform.localPosition - _parentTransform.localPosition - _drawAnimOffSet,
+       _tween = DOTween.To(() => transform.transform.localPosition - _parentTransform.localPosition - _drawAnimOffSet,
             x => transform.transform.localPosition = x,
             transform.transform.localPosition, 0.5f)
             .OnStart(() => _cardEvent.enabled = false)

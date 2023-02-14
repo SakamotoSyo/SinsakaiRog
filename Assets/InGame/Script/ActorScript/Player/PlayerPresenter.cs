@@ -21,7 +21,7 @@ public class PlayerPresenter : IStartable, IDisposable
     public void Start()
     {
         _playerStauts.GetHandCardListOb().ObserveAdd().Subscribe(x => _playerView.DrawView(x.Value)).AddTo(_compositeDisposable);
-        _playerStauts.GetDiscardedCountOb().ObserveCountChanged().Subscribe(_playerView.DiscardedCardView).AddTo(_compositeDisposable);
+        _playerStauts.GetGraveyardCardsCountOb().ObserveCountChanged().Subscribe(_playerView.GraveyardCardsView).AddTo(_compositeDisposable);
         _playerStauts.GetDeckCardListOb().ObserveCountChanged().Subscribe(_playerView.DeckCardView).AddTo(_compositeDisposable);
         _playerStauts.GetStatusBase().GetDefeceOb().Subscribe(_playerView.SetDefense).AddTo(_compositeDisposable);
         _playerStauts.GetCostOb().Subscribe(_playerView.SetCostText).AddTo(_compositeDisposable);
