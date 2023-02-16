@@ -19,5 +19,8 @@ public interface IPlayerStatus
     public void DrawCard(float num = 1);
     public void AddDeckCard(CardBaseClass cardBase);
     public void GraveyardCardsAdd(CardBaseClass cardBase);
+    public PlayerStatusSaveData GetPlayerSaveData();
+    public void SetPlayerSaveData(PlayerStatusSaveData playerData);
 
 }
+

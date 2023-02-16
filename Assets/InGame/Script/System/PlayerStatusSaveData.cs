@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct PlayerStatusSaveData
+public class PlayerStatusSaveData
 {
     public float MaxHp;
     public float Currenthp;
@@ -11,8 +11,11 @@ public struct PlayerStatusSaveData
     public float MaxCost;
     public float Gold;
     public List<CardBaseClass> DeckCardList;
-    public List<CardBaseClass> HandCardList;
-    public List<CardBaseClass> GraveyardCards;
+
+    public PlayerStatusSaveData() 
+    {
+        DeckCardList = new List<CardBaseClass>();
+    } 
 }
 
 public enum PlayerStatusSaveType 
