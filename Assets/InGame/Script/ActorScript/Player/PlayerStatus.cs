@@ -17,8 +17,6 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     private ReactiveCollection<CardBaseClass> _handCardList = new();
     [Tooltip("山札のカードリスト")]
     private ReactiveCollection<CardBaseClass> _deckCardList = new();
-    /// <summary>デバック用変数</summary>
-    [SerializeField] private List<CardBaseClass> _deckCopyList = new();
     [Tooltip("捨て札を貯めておくList")]
     private ReactiveCollection<CardBaseClass> _graveyardCards = new();
 
@@ -32,21 +30,13 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     public override void Init()
     {
         base.Init();
+        SetPlayerSaveData(GameManager.SaveData);
 
     }
 
     public void DeckInit() 
     {
-        _maxCost = 3;
-        _deckCardList.Add(DataBaseScript.CardBaseClassList[2]);
-        for (int i = 0; i < 4; i++)
-        {
-            _deckCardList.Add(DataBaseScript.CardBaseClassList[0]);
-            _deckCardList.Add(DataBaseScript.CardBaseClassList[1]);
-        }
-        //_deckCardList = new ReactiveCollection<CardBaseClass>(DataBaseScript.CardBaseClassList);
-        //_deckCardList = new ReactiveCollection<CardBaseClass>(_deckCopyList);
-        _cost.Value = _maxCost;
+
     }
 
     /// <summary>
@@ -122,13 +112,18 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         _gold.Value += gold;
     }
 
-    public void UseGold(float gold)
+    public bool UseGold(float useGold)
     {
-        _gold.Value -= gold;
+        if (useGold <= _gold.Value) 
+        {
+            _gold.Value -= useGold;
+            return true;
+        }
+
+        return false;
     }
 
     #region　Get関数
-
     public IObservable<float> GetCostOb()
     {
         return _cost;
@@ -152,5 +147,57 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     {
         return this;
     }
+
+    public IObservable<float> GetGoldOb()
+    {
+        return _gold;
+    }
+
+    public ReactiveCollection<CardBaseClass> GetGraveyardCardList()
+    {
+        return _graveyardCards;
+    }
+
+    public ReactiveCollection<CardBaseClass> GetDeckCardList()
+    {
+        return _deckCardList;
+    }
     #endregion
+
+    public PlayerStatusSaveData GetPlayerSaveData() 
+    {
+        PlayerStatusSaveData saveData = new PlayerStatusSaveData();
+        saveData.MaxHp = _maxHp.Value;
+        saveData.Currenthp = _currentHp.Value;
+        saveData.Defence = _defence.Value;
+        saveData.Nowcost = _cost.Value;
+        saveData.MaxCost = _maxCost;
+        saveData.Gold = _gold.Value;
+        saveData.DeckCardList = new List<CardBaseClass>(_deckCardList);
+        for (int i = 0; i < _handCardList.Count; i++) 
+        {
+            saveData.DeckCardList.Add(_handCardList[i]);
+        }
+
+        for (int i = 0; i < _graveyardCards.Count; i++) 
+        {
+            //saveData.DeckCardList.Add(_graveyardCards[i]);
+        }
+        return saveData;
+    }
+
+    /// <summary>
+    /// セーブデータをステータスにセットする
+    /// </summary>
+    /// <param name="playerData"></param>
+    public void SetPlayerSaveData(PlayerStatusSaveData playerData) 
+    {
+        _maxHp.Value = playerData.MaxHp;
+        _currentHp.Value = playerData.Currenthp;
+        _defence.Value = playerData.Defence;
+        _cost.Value = playerData.Nowcost;
+        _maxCost = playerData.MaxCost;
+        _gold.Value = playerData.Gold;
+        _deckCardList = new ReactiveCollection<CardBaseClass>(playerData.DeckCardList);
+    }
 }
