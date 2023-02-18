@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class ActorViewBase : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class ActorViewBase : MonoBehaviour
     [SerializeField] private Text _maxHpText;
     [SerializeField] private Text _currentHpText;
     [SerializeField] private Text _defenceText;
+    [SerializeField] private Text _damageEffectText;
+    [SerializeField] private Animator _damagEffectAnim;
     [Tooltip("Hpバー最長の長さ")]
     private float _maxHpWidth;
     [Tooltip("Hpバーの最大値")]
@@ -37,20 +40,20 @@ public class ActorViewBase : MonoBehaviour
 
     public virtual void SetHpCurrent(float currentHp)
     {
+        if (int.Parse(_currentHpText.text) > 0) 
+        {
+            DamageEffectUI(currentHp);
+        }
         //バーの長さを更新
         _rectCurrent.SetWidth(GetWidth(currentHp));
         _currentHpText.text = currentHp.ToString("0");
-        if (currentHp < 0)
-        {
-
-        }
     }
 
     /// <summary>
     /// 防御が変わった時の処理
     /// </summary>
     /// <param name="num"></param>
-    public virtual void SetDefense(float num) 
+    public virtual void SetDefense(float num)
     {
         if (0 < num)
         {
@@ -59,19 +62,32 @@ public class ActorViewBase : MonoBehaviour
             _hpImage.color = _hpDefenceColor;
             _hpOutLineImage.color = _hpOutLineDefenceColor;
         }
-        else 
+        else
         {
             _defenceObj.SetActive(false);
             _hpImage.color = _hpDefaultColor;
             _hpOutLineImage.color = _hpOutLineDefaultColor;
         }
-        
+
     }
 
     protected float GetWidth(float value)
     {
         float width = Mathf.InverseLerp(0, _maxTime, value);
         return Mathf.Lerp(0, _maxHpWidth, width);
+    }
+
+    /// <summary>
+    /// ダメージの受けた数字分のエフェクトを出す
+    /// </summary>
+    /// <param name="value">受けたダメージ</param>
+    public async void DamageEffectUI(float value)
+    {
+        _damageEffectText.enabled = true;
+        _damageEffectText.text = (int.Parse(_currentHpText.text) - value).ToString("0");
+        _damagEffectAnim.SetTrigger("DamageEffect");
+        await UniTask.WaitUntil(() => _damagEffectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+        _damageEffectText.enabled = false;
     }
 }
 
