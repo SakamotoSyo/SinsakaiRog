@@ -6,21 +6,22 @@ using UniRx;
 public class PlayerEventPresenter : IStartable, IDisposable
 {
     private PlayerEventView _playerView;
-    public static IPlayerStatus PlayerStatus => _playerStauts;
-    private static IPlayerStatus _playerStauts;
+    public static IPlayerStatus PlayerStatus => _playerStatus;
+    private static IPlayerStatus _playerStatus;
     private CompositeDisposable _compositeDisposable = new();
 
     [Inject]
     public PlayerEventPresenter(PlayerEventView playerView, IPlayerStatus playerStatus)
     {
         _playerView = playerView;
-        _playerStauts = playerStatus;
+        _playerStatus = playerStatus;
     }
 
     public void Start()
     {
-        PlayerStatus.GetStatusBase().GetMaxHpOb().Subscribe(_playerView.SetMaxHpView);
-        PlayerStatus.GetStatusBase().GetCurrentHpOb().Subscribe(_playerView.SetCurrentHp);
+        _playerStatus.GetStatusBase().GetMaxHpOb().Subscribe(_playerView.SetMaxHpView).AddTo(_compositeDisposable);
+        _playerStatus.GetStatusBase().GetCurrentHpOb().Subscribe(_playerView.SetCurrentHp).AddTo(_compositeDisposable);
+        _playerStatus.GetGoldOb().Subscribe(_playerView.SetGoldView).AddTo(_compositeDisposable);
     }
 
     public void Dispose()
