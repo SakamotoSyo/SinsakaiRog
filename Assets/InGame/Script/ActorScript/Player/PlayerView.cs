@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerView : ActorViewBase
 {
-    [SerializeField] Text _costText;
-    [SerializeField] Text _discardedText;
-    [SerializeField] Text _deckText;
+    [SerializeField] private Text _costText;
+    [SerializeField] private Text _discardedText;
+    [SerializeField] private Text _deckText;
     [SerializeField] private GameObject _cardParentObj;
     [SerializeField] private GameObject _cardPrefab;
 

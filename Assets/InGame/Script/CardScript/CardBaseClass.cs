@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Text;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "CardData", menuName = "SakamotoScriptable/CradData")]
@@ -14,6 +15,12 @@ public class CardBaseClass : ScriptableObject
     private float _cardDefence;
     public float CardCost => _cardCost;
     private float _cardCost;
+    public int Gold => _gold;
+    private int _gold;
+    public EnhancementData EnhancementData => _cardEnhancement;
+    private EnhancementData _cardEnhancement;
+    public int NumberReinforcement => _numberReinforcement;
+    private int _numberReinforcement;
     public TargetType Tartget => _target;
     [SerializeField] private TargetType _target;
     public string CardDescription => _cardDescription;
@@ -21,11 +28,13 @@ public class CardBaseClass : ScriptableObject
     private string _cardDescription;
     public Sprite CardSprite => _cardSprite;
     [SerializeField] private Sprite _cardSprite;
-    
+
+    public List<EffectData> Effect => _effect;
     [SerializeField] List<EffectData> _effect = new List<EffectData>();
 
 
-    public CardBaseClass(int id, string name, float defence, string target, float cost, string Description, Sprite sp, List<EffectData> effectBase)
+    public CardBaseClass(int id = 0, string name = "", float defence = 0, string target = " Player", float cost = 0, 
+        string Description = "", Sprite sp = null, int gold = 0, EnhancementData cardEnhancement = default, List<EffectData> effectBase = null)
     {
         _id = id;
         _cardDefence = defence;
@@ -34,19 +43,54 @@ public class CardBaseClass : ScriptableObject
         _cardDescription = Description;
         _name = name;
         _cardSprite = sp;
+        _gold = gold;
+        _cardEnhancement = cardEnhancement;
         _effect = effectBase;
     }   
     
-    public void Init(int id, string name, float defence, string target, float cost, string Description, Sprite sp, List<EffectData> effectBase)
+    public void Init(CardBaseClass card)
     {
-        _id = id;
-        _cardDefence = defence;
-        _cardCost = cost;
-        _target = Enum.Parse<TargetType>(target);
-        _cardDescription = Description;
-        _name = name;
-        _cardSprite = sp;
-        _effect = effectBase;
+        _id = card.ID;
+        _cardDefence = card.CardDefence;
+        _cardCost = card.CardCost;
+        _target = card.Tartget;
+        _cardDescription = card.CardDescription;
+        _name = card.Name;
+        _cardSprite = card.CardSprite;
+        _gold = card.Gold;
+        _cardEnhancement = card.EnhancementData;
+        _effect = new List<EffectData>(card.Effect);
+    }
+
+    /// <summary>
+    /// ƒRƒXƒg‚ğŒ¸‚ç‚·
+    /// </summary>
+    public void DecreasedCost() 
+    {
+        _cardCost -= int.Parse(_cardEnhancement.CardEnhancementNum);
+    }
+
+    /// <summary>
+    /// ‹­‰»‚µ‚½‰ñ”‚ğˆê‰ñ‘‚â‚·
+    /// </summary>
+    public void SetEnhancementNum() 
+    {
+        _numberReinforcement++;
+        _name += "<color=blue>{</color>";
+    }
+
+    /// <summary>
+    /// ˆê”ÔÅ‰‚ÌŒø‰Ê‚Ì‹­‚³‚ğã‚°‚é
+    /// </summary>
+    public void IncreaseEffectPower()
+    {
+        _effect[0] = new EffectData(_effect[0].CardEffect, _effect[0].Power + int.Parse(_cardEnhancement.CardEnhancementNum));
+        var num = _cardDescription.IndexOf(">");
+        StringBuilder sb = new StringBuilder();
+        sb.Append(_cardDescription);
+        sb.Remove(num + 1, (_effect[0].Power - 1).ToString().Length);
+        sb.Insert(num + 1, _effect[0].Power.ToString());
+        _cardDescription = sb.ToString();
     }
 
     /// <summary>
@@ -62,19 +106,32 @@ public class CardBaseClass : ScriptableObject
     }
 }
 
-[System.Serializable]
-public class EffectData
+public struct EffectData
 {
     public IEffect CardEffect => _effect;
     [SerializeReference,SubclassSelector]
     private IEffect _effect;
     public float Power => _power;
-    [SerializeField] private float _power;
+    private float _power;
 
     public EffectData(IEffect effect, float power) 
     {
         _effect = effect;
          _power = power;
+    }
+}
+
+public struct EnhancementData 
+{
+    public string CardEnhancement => _cardEnhancement;
+    private string _cardEnhancement;
+    public string CardEnhancementNum => _cardEnhancementNum;
+    private string _cardEnhancementNum;
+
+    public EnhancementData(string st, string st2) 
+    {
+        _cardEnhancement = st;
+        _cardEnhancementNum = st2;
     }
 }
 
