@@ -9,7 +9,8 @@ public class DrawState : State
 {
     protected override async void OnEnter(State currentState)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        Owner.EnemyController.EnemyStatus.AttackDecision();
+        await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         Owner.PlayerController.DrawCard();
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         StateMachine.Dispatch((int)BattleStateManager.BattleEvent.PlayerAttack);
