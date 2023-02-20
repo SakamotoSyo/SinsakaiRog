@@ -10,7 +10,7 @@ public class DataBaseScript : MonoBehaviour
     public static List<EnemyStatusData> EnemyData => _enemyStatusData;
     public static float BasicReWardGold => _basicReWardGold;
     [Tooltip("階層による倍率")]
-    public const float EFFECT_MAGNIFICATION = 0.1f;
+    public const float EFFECT_MAGNIFICATION = 0.05f;
 
     //TODO:鈴木先生のScriptを見て後々変更を絶対に入れる
     [Header("カードのテキストデータ")]
@@ -18,18 +18,37 @@ public class DataBaseScript : MonoBehaviour
     [Header("敵のステータスデータ")]
     [SerializeField] private TextAsset _enemyData;
     [Header("カードのSpriteデータ")]
-    [SerializeField] private List<CardSpriteData> _cardSprite = new();
+    [SerializeField] private  List<CardSpriteData> _cardSprite = new();
     [Tooltip("階層によって敵にかかる倍率")]
     private static List<EnemyStatusData> _enemyStatusData = new(); 
     private static List<CardBaseClass> _cardList = new();
     private readonly int _floatLoopNum = 2;
     [Tooltip("報酬のベースとなるゴールド")]
     private static int _basicReWardGold = 20;
+    private static bool _isInit = false;
+
+    private void Awake()
+    {
+        if (!_isInit)
+        {
+            CardDataInit();
+            EnemyDataInit();
+            PlayerDataInit();
+            Debug.Log("Dataの初期化");
+            _isInit = true;
+        }
+    }
 
     public void Init()
     {
-        CardDataInit();
-        EnemyDataInit();
+        if (!_isInit) 
+        {
+            CardDataInit();
+            EnemyDataInit();
+            PlayerDataInit();
+            Debug.Log("Dataの初期化");
+            _isInit = true;
+        }
     }
 
     private void Start()
@@ -44,7 +63,7 @@ public class DataBaseScript : MonoBehaviour
         sr.ReadLine();
 
         //TODO:データの数だけforが周りようにする
-        for (int i = 0; i < 3; i++) 
+        while(true) 
         {
             string line = sr.ReadLine();
 
@@ -58,16 +77,17 @@ public class DataBaseScript : MonoBehaviour
             float[] floats = new float[_floatLoopNum];
             floats[0] = float.Parse(parts[2]);
             floats[1] = float.Parse(parts[4]);
-
+            var gold = int.Parse(parts[7]);
             List<EffectData> effectList = new List<EffectData>();
+            var enhansmentData = parts[8].Split('_');
             //ここのマジックナンバー後で修正
-            for (int j = 7; j < parts.Length; j++)
+            for (int j = 9; j < parts.Length; j++)
             {
                 var data = parts[j].Split('_');
                 effectList.Add(new EffectData(MakeClass<IEffect>(data[0]), float.Parse(data[1])));
             }
-            
-            CardBaseClass cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1], parts[5], GetSprite(parts[6]), effectList);
+            CardBaseClass cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1], parts[5]
+                , GetSprite(parts[6]), gold, new EnhancementData(enhansmentData[0], enhansmentData[1]), effectList);
             _cardList.Add(cardBaseClass);
         }
 
@@ -98,13 +118,43 @@ public class DataBaseScript : MonoBehaviour
             for (int j = 3; j < parts.Length; j++) 
             {
                 var effect = parts[j].Split('_');
-                Debug.Log(Enum.Parse<EffectTypeImage>(effect[3]));
                 enemyEffectDatas.Add(new EnemyEffectData(MakeClass<IEffect>(effect[0]), Enum.Parse<TargetType>(effect[1]), Enum.Parse<EffectTypeImage>(effect[3]), float.Parse(effect[2])));
             }
             EnemyStatusData enemyStatusData = new EnemyStatusData(parts[0], MaxHp, BaseLevel, enemyEffectDatas);
 
             _enemyStatusData.Add(enemyStatusData);
         }
+    }
+
+    public void PlayerDataInit() 
+    {
+        var playerData = new PlayerStatusSaveData();
+        playerData.MaxHp = 50;
+        playerData.Currenthp = playerData.MaxHp;
+        playerData.MaxCost = 3;
+        playerData.Nowcost = playerData.MaxCost;
+        var deckList = new List<CardBaseClass>();
+        deckList.Add(CardBaseClassList[CardBaseClassList.Count - 1]);
+        for (int i = 0; i < 4; i++)
+        {
+            deckList.Add(NewCard(CardBaseClassList[0]));
+            deckList.Add(NewCard(CardBaseClassList[1]));
+        }
+        playerData.DeckCardList = new List<CardBaseClass>(deckList);
+
+        GameManager.SavePlayerData(playerData);
+    }
+
+    /// <summary>
+    /// 値渡しで情報を渡す
+    /// </summary>
+    /// <param name="cardBase"></param>
+    /// <returns></returns>
+    public CardBaseClass NewCard(CardBaseClass cardBase) 
+    {
+        var card = new CardBaseClass();
+        card.Init(cardBase);
+        return card;
     }
 
     /// <summary>
@@ -117,7 +167,7 @@ public class DataBaseScript : MonoBehaviour
         return _cardSprite.Find(x => x.ImageType == type).CardSprite;
     }
 
-    public CardBaseClass GetRandomCard() 
+    public static CardBaseClass GetRandomCard() 
     {
         return _cardList[UnityEngine.Random.Range(0, _cardList.Count)];
     }
@@ -149,4 +199,6 @@ public enum ImageType
     Slash,
     Defence,
     Draw,
+    DefenceBreak,
+    Strategy,
 }
