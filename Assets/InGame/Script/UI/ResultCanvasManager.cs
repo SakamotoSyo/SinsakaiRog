@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class ResultCanvasManager : MonoBehaviour
 {
@@ -25,13 +26,13 @@ public class ResultCanvasManager : MonoBehaviour
     private Button[] _cardButtonArray = new Button[3];
     private GameObject[] _cardObjArray = new GameObject[3];
 
-    public void ActiveResultPanel() 
+    public void ActiveResultPanel()
     {
         _itemPanel.SetActive(true);
         ItemButtonReWardIns();
     }
 
-    public void ActiveReWardPanel() 
+    public void ActiveReWardPanel()
     {
         _itemPanel.SetActive(true);
         _cardParentObj.SetActive(false);
@@ -43,9 +44,9 @@ public class ResultCanvasManager : MonoBehaviour
     public void ItemButtonReWardIns()
     {
         //TODO:ここのまわる回数をランダムに変えることで報酬の増減を設定したい
-        for (int i = 0; i < 2; i++) 
+        for (int i = 0; i < 2; i++)
         {
-           var obj = Instantiate(_itemButtonPrefab, transform.position, transform.rotation);
+            var obj = Instantiate(_itemButtonPrefab, transform.position, transform.rotation);
             _itemObjArray[i] = obj;
             //ボタンのImageとTextの設定
             _itemButtonArray[i] = _itemObjArray[i].GetComponent<RewardButtonSetting>().ButtonSetting((ReWardType)i);
@@ -59,74 +60,82 @@ public class ResultCanvasManager : MonoBehaviour
     /// <summary>
     /// プレイヤーがゴールドの報酬をゲットする
     /// </summary>
-    public void GetPlayerReWardGold() 
+    public void GetPlayerReWardGold()
     {
         Destroy(_itemObjArray[0]);
         _actorGenerator.PlayerController.AddReWardGold(DataBaseScript.BasicReWardGold * GameManager.CurremtLevel
-            * DataBaseScript.EFFECT_MAGNIFICATION);
+            * (DataBaseScript.EFFECT_MAGNIFICATION + 1));
         Destroy(_itemButtonArray[0].gameObject);
     }
 
     /// <summary>
     /// カードを選択するAnimationが始まる
     /// </summary>
-    public void BeginChooseCardScreen() 
+    public void BeginChooseCardScreen()
     {
         Destroy(_itemObjArray[1]);
         _reWardParentObj.SetActive(false);
         _cardParentObj.SetActive(true);
         //TODO:マジックナンバー
         //報酬の回数分カードを生成
-        for (int i = 0; i < 3; i++) 
+        for (int i = 0; i < 3; i++)
         {
             _cardObjArray[i] = Instantiate(_cardButtonPrefab);
             var cardController = _cardObjArray[i].GetComponent<CardController>();
             cardController.SetCardBaseClass
                 (DataBaseScript.CardBaseClassList[Random.Range(0, DataBaseScript.CardBaseClassList.Count)]);
-            //cardController.CardAnimation.SetParentTransform(_cardInsPos.transform);
             _cardObjArray[i].transform.SetParent(_cardInsPos.transform);
             _cardButtonArray[i] = _cardObjArray[i].GetComponent<Button>();
         }
 
-        for (int i = 0; i < _cardObjArray.Length; i++) 
+        for (int i = 0; i < _cardObjArray.Length; i++)
         {
             var cardObj = _cardObjArray[i];
             _cardButtonArray[i].onClick.AddListener(() => GetReWardCard(cardObj));
         }
     }
 
-    public void GetReWardCard(GameObject obj) 
+    /// <summary>
+    /// カードを選択されたときそのカードをPlayerに追加
+    /// </summary>
+    /// <param name="obj"></param>
+    public void GetReWardCard(GameObject obj)
     {
         //選択されたカードをデッキに追加する
         _actorGenerator.PlayerController.PlayerStatus.AddDeckCard(obj.GetComponent<CardController>().CardBaseClass);
-        for (int i = 0; i < _cardButtonArray.Length; i++) 
+        CloseReWardCardMenu();
+    }
+
+    public void CloseReWardCardMenu() 
+    {
+
+        for (int i = 0; i < _cardButtonArray.Length; i++)
         {
             _cardButtonArray[i].enabled = false;
         }
         //カードをAnimationさせた後にDestroyする
-        for(int i = 0; i < _cardObjArray.Length; i++) 
+        for (int i = 0; i < _cardObjArray.Length; i++)
         {
             var moveObj = _cardObjArray[i];
             DOTween.To(() => moveObj.transform.localPosition,
                 x => moveObj.transform.localPosition = x,
                 _cardTransform.position, 0.5f)
-                .OnComplete(() => 
+                .OnComplete(() =>
                 {
                     Destroy(moveObj);
                     ActiveReWardPanel();
                 });
         }
-
-        Debug.Log($"{obj.GetComponent<CardController>().CardBaseClass.Name}Getした");
     }
 
-    public void Arrow() 
+    public void ArrowAction()
     {
-        Debug.Log("Arrow");
+        GameManager.SavePlayerData(_actorGenerator.PlayerController.PlayerStatus.GetPlayerSaveData());
+        LoadSceneManager.ToDownTheStairsScene();
     }
 }
 
-public enum ReWardType 
+public enum ReWardType
 {
     Gold,
     Card,

@@ -38,9 +38,4 @@ public class ShopScript : MonoBehaviour
             x => _shopContentPanel.transform.localPosition = x,
             _shopContentPanel.transform.localPosition + _shopPos, 1f);
     }
-
-    public void ArrowAction() 
-    {
-        LoadSceneManager.ToDownTheStairsScene();
-    }
 }
