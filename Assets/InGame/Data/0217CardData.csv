@@ -1,0 +1,4 @@
+id,名前,防御力,ターゲット,コスト,説明文,カードのImage,ゴールド,カード効果項目
+1,スラッシュ,0,Enemy,1,相手に<color=red>5</color>のダメージを与える,Slash,5,AttackEffect_5
+2,シールド,10,Player,1,自分に<color=blue>5</color>のシールドを付与する,Defence,5,DefenceEffect_10
+3,ドロー,0,Player,2,カードを<color=green>2</color>枚ドローする,Draw,10,DrawEffect_2

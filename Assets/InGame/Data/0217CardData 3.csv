@@ -1,0 +1,6 @@
+id,名前,防御力,ターゲット,コスト,説明文,カードのImage,ゴールド,カードが強化可能か,カード効果項目
+1,スラッシュ,0,Enemy,1,相手に<color=red>5</color>のダメージを与える,Slash,5,Power,AttackEffect_5
+2,シールド,10,Player,1,自分に<color=blue>10</color>のシールドを付与する,Defence,5,Power,DefenceEffect_10
+3,閃き,0,Player,2,カードを<color=green>2</color>枚ドローする,Draw,10,Cost,DrawEffect_2
+4,ガードブレイク,0,Enemy,2,相手のガードを<color=green>０</color>にする,DefenceBreak,5,Power,DefenceBreakEffect_0
+5,戦略,0,Enemy,2,敵の左端にある行動を<color=green>1</color>つ無効にする,Strategy,20,Cost,StrategyEffect_0

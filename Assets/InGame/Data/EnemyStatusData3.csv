@@ -1,0 +1,2 @@
+名前,最大Hp,ベースの階層,Enemyの行動パターン
+リノ,5,1,AttackEffect_Player_10_Attack,DefenceEffect_Enemy_10_Defence
