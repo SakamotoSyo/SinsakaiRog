@@ -6,56 +6,64 @@ using State = StateMachine<BattleStateManager>.State;
 
 public class BattleStateManager : MonoBehaviour
 {
+    public FieldTest FieldCs => _fieldCs;
+    public ResultCanvasManager ResultCanvasManager => _resultManager;
     public PlayerController PlayerController => _playerCon;
     public EnemyController EnemyController => _enemyCon;
     public BattleStateView BattleStateView => _battleStateView;
 
     [SerializeField] private BattleStateView _battleStateView;
     [SerializeField] private ActorGenerator _generator;
+    [SerializeField] private ResultCanvasManager _resultManager;
+    [SerializeField] private FieldTest _fieldCs;
+    private bool _isStart = false;
     private StateMachine<BattleStateManager> _stateMachine;
     private PlayerController _playerCon;
     private EnemyController _enemyCon;
 
-    public enum BattleEvent 
+    public enum BattleEvent
     {
+        BattleStart,
         Draw,
         PlayerAttack,
         EnemyAttack,
         BattleResult,
     }
 
-    void Start()
+    private async void Start()
     {
+        await FadeScript.Instance.FadeIn();
+        _isStart = true;
         _playerCon = _generator.PlayerController;
         _enemyCon = _generator.EnemyController;
         _stateMachine = new StateMachine<BattleStateManager>(this);
+        _stateMachine.AddTransition<BattleStartState, PlayerAttackState>((int)BattleEvent.BattleStart);
         _stateMachine.AddTransition<DrawState, PlayerAttackState>((int)BattleEvent.PlayerAttack);
         _stateMachine.AddTransition<PlayerAttackState, EnemyAttackState>((int)BattleEvent.EnemyAttack);
         _stateMachine.AddTransition<EnemyAttackState, DrawState>((int)BattleEvent.Draw);
         _stateMachine.AddAnyTranstion<BattleResultState>((int)BattleEvent.BattleResult);
         //一番最初のステートを始める
-        _stateMachine.Start<DrawState>();
-        _enemyCon.EnemyStatus.CurrentHp.Subscribe(ToBattleResult).AddTo(this);
+        _stateMachine.Start<BattleStartState>();
+        _enemyCon.EnemyStatus.GetStatusBase().GetCurrentHpOb().Subscribe(ToBattleResult).AddTo(this);
     }
 
     void Update()
     {
-        _stateMachine.Update();
-        _battleStateView.DebugTurnText(_stateMachine.CurrentState.ToString());
-    }
-
-    
-    public void BattleTrunEnd() 
-    {
-       if(_stateMachine.CurrentState == _stateMachine.GetOrAddState<PlayerAttackState>()) 
+        if (_isStart)
         {
-            _stateMachine.Dispatch((int)BattleEvent.EnemyAttack);
+            _stateMachine.Update();
+            _battleStateView.DebugTurnText(_stateMachine.CurrentState.ToString());
         }
     }
 
-    public void ToBattleResult(float value) 
+    public void ToEnemyTrun()
     {
-        if (value <= 0) 
+        _stateMachine.Dispatch((int)BattleEvent.EnemyAttack);
+    }
+
+    public void ToBattleResult(float value)
+    {
+        if (value <= 0)
         {
             _stateMachine.Dispatch((int)BattleEvent.BattleResult);
         }
