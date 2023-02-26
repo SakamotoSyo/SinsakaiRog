@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/InGame/Scenes/MainScenes/Title.unity
+    guid: 03cb6bb9571fa104b938756a4483267a
+  - enabled: 1
+    path: Assets/InGame/Scenes/MainScenes/MainBattleScene.unity
+    guid: 1c6d75eaa80797041a20dd6a10c1f6d2
+  - enabled: 1
+    path: Assets/InGame/Scenes/DownTheStairsScene.unity
+    guid: 8e582f491a38ecf4cb2cbe23b2cae824
+  - enabled: 1
+    path: Assets/InGame/Scenes/EventScene.unity
+    guid: 14a2c64dbd956d346b9f674d144cc297
   m_configObjects: {}
