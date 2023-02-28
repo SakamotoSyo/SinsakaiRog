@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerPresenterName;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private IPlayerStatus _playerStatus;
     [SerializeField] private PlayerAnim _playerAnim = new();
     [SerializeField] private GameObject _playerDownPrefab;
+    [SerializeField] private GameObject _cardInsPos;
     //TODO:参照はIplayerStatusから持ってくる;
     private IStatusBase _statusBase;
 
@@ -29,22 +31,26 @@ public class PlayerController : MonoBehaviour
             _statusBase.AddDamage(damage);
             _playerAnim.DamageAnim();
         }
-        else 
+        else
         {
             _playerAnim.DownAnim();
-           
+
         }
     }
 
-    public void DefenseIncrease(float num) 
+    public void DefenseIncrease(float num)
     {
-        if (_statusBase.GetDefenceNum() <= 0) 
+        if (_statusBase.GetDefenceNum() <= 0)
         {
             _playerAnim.ActiveDefence();
         }
         _statusBase.DefenseIncrease(num);
-    }  
+    }
 
+    /// <summary>
+    /// カードをドローする流れ
+    /// </summary>
+    /// <param name="num">ドローする枚数</param>
     public void DrawCard(float num = 1)
     {
         _playerStatus.DrawCard(num);
@@ -53,14 +59,24 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// ゴールドをゲットする一連の流れの処理
     /// </summary>
-    public void AddReWardGold(float gold) 
+    public void AddReWardGold(float gold)
     {
         _playerStatus.AddGold(gold);
     }
 
+    public void PlayerTurnEnd() 
+    {
+       _playerStatus.DiscardAllHandCards();
+       var controllerArray = _cardInsPos.GetComponentsInChildren<CardController>();
+       for(int i = 0; i < controllerArray.Length; i++) 
+        {
+            controllerArray[i].ThrowCard();
+        }
+    }
+
     public bool UseCost(float useCost)
     {
-        if (_playerStatus.UseCost(useCost)) 
+        if (_playerStatus.UseCost(useCost))
         {
             return true;
         }
