@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class EnemyController : MonoBehaviour
 {
@@ -15,7 +16,6 @@ public class EnemyController : MonoBehaviour
     {
         _enemyStatus = EnemyStatusPresenter.EnemyStatus;
         _statusBase = _enemyStatus.GetStatusBase();
-        _enemyStatus.StatusSet(DataBaseScript.EnemyData[0]);
     }
 
     /// <summary>
@@ -45,15 +45,16 @@ public class EnemyController : MonoBehaviour
     /// <summary>
     /// 攻撃に関する一連の流れ
     /// </summary>
-    public void Attack(PlayerController player)
+    public async UniTask Attack(PlayerController player)
     {
+        var loopNum = _enemyStatus.GetEnemyTurnEffectOb().Count;
         //攻撃の回数分メソッドを呼ぶ
-        for (int i = 0; i < _enemyStatus.GetEnemyTurnEffectOb().Count; i++)
+        for (int i = 0; i < loopNum; i++)
         {
-            _enemyAttack.AttackEffect(player, this, _enemyStatus.GetEnemyTurnEffectOb()[i]);
-            _enemyAnim.AttackAnim();
+            Debug.Log(_enemyStatus.GetEnemyTurnEffectOb().Count);
+            _enemyAttack.AttackEffect(player, this, _enemyStatus.GetEnemyTurnEffectOb()[0]);
+            _enemyStatus.AttackDecisionReset();
+            await _enemyAnim.AttackAnim();
         }
-
-        _enemyStatus.AttackDecisionReset();
     }
 }
