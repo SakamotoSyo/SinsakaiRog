@@ -21,10 +21,9 @@ public class CardController : MonoBehaviour
         _cardAnimation.DrawAnim(transform);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-       _cardBaseClass.Value = DataBaseScript.CardBaseClassList[0];
+
     }
 
     // Update is called once per frame
@@ -33,9 +32,17 @@ public class CardController : MonoBehaviour
         
     }
 
-    public async void SetCardBaseClass(CardBaseClass card) 
+    /// <summary>
+    /// ƒJ[ƒh‚ğÌ‚Ä‚éˆ—‚Ì—¬‚ê
+    /// </summary>
+    public async void ThrowCard() 
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(0.01));
+       await _cardAnimation.ThrowAnim(transform);
+        Destroy(gameObject.transform.parent.gameObject);
+    }
+
+    public void SetCardBaseClass(CardBaseClass card) 
+    {
         _cardBaseClass.Value = card;
     }
 }
