@@ -8,8 +8,8 @@ using VContainer.Unity;
 public class EnemyStatus : StatusModelBase, IEnemyStatus
 {
     [Tooltip("行動する回数")]
-    private int _actionNum = 1;
-
+    private string _actionNum;
+    private EnemyStatusData _enemyStatus;
     [Tooltip("行動パターン")]
     private List<EnemyEffectData> _effectDataList = new List<EnemyEffectData>();
     public IReactiveCollection<EnemyEffectData> EnemyTurnEffect => _enemyTurnEffect;
@@ -29,12 +29,12 @@ public class EnemyStatus : StatusModelBase, IEnemyStatus
     {
         _maxHp.Value = Mathf.Floor(enemy.MaxHp * EffectMagnifivationNum(enemy.BaseCurrentLevel));
         _currentHp.Value = _maxHp.Value;
+        _actionNum = enemy.ActionNum;
         _effectDataList = new List<EnemyEffectData>(enemy.enemyEffectDataList);
         for (int i = 0; i < _effectDataList.Count; i++) 
         {
             _effectDataList[i].EffectPowerMultiplication(EffectMagnifivationNum(enemy.BaseCurrentLevel));
         }
-
     }
 
     /// <summary>
@@ -42,7 +42,19 @@ public class EnemyStatus : StatusModelBase, IEnemyStatus
     /// </summary>
     public void AttackDecision()
     {
-        for (int i = 0; i < _actionNum; i++)
+        var actionNum = 0;
+        if (_actionNum.Contains("~"))
+        {
+            var numArray = _actionNum.Split('~');
+            actionNum = UnityEngine.Random.Range(int.Parse(numArray[0]), int.Parse(numArray[1]) + 1);
+        }
+        else 
+        {
+            Debug.Log(_actionNum);
+            actionNum = int.Parse(_actionNum);
+        }
+
+        for (int i = 0; i < actionNum; i++)
         {
             _enemyTurnEffect.Add(_effectDataList[UnityEngine.Random.Range(0, _effectDataList.Count)]);
         }
@@ -79,22 +91,6 @@ public class EnemyStatus : StatusModelBase, IEnemyStatus
     public ReactiveCollection<EnemyEffectData> GetEnemyTurnEffect()
     {
         return _enemyTurnEffect;
-    }
-}
-
-public struct EnemyStatusData
-{
-    public string Name;
-    public int BaseCurrentLevel;
-    public float MaxHp;
-    public List<EnemyEffectData> enemyEffectDataList;
-
-    public EnemyStatusData(string name, float maxHp, int baseCurrentLevel, List<EnemyEffectData> effectList)
-    {
-        enemyEffectDataList = new List<EnemyEffectData>(effectList);
-        Name = name;
-        MaxHp = maxHp;
-        BaseCurrentLevel = baseCurrentLevel;
     }
 }
 
