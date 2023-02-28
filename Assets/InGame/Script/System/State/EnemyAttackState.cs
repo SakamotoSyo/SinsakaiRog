@@ -10,13 +10,13 @@ public class EnemyAttackState : State
     private readonly float _trunAnimTime = 2;
     protected async override void OnEnter(State currentState)
     {
+        Owner.PlayerController.PlayerTurnEnd();
         Owner.BattleStateView.TurnAnim(this);
         await UniTask.Delay(TimeSpan.FromSeconds(_trunAnimTime));
         //敵の攻撃行動を始める
-        Owner.EnemyController.Attack(Owner.PlayerController);
+        await Owner.EnemyController.Attack(Owner.PlayerController);
+        await UniTask.Delay(TimeSpan.FromSeconds(0.5));
         StateMachine.Dispatch((int)BattleStateManager.BattleEvent.Draw);
-        //TODO:マジックナンバーやめる
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
     }
 
     protected override void OnUpdate()
