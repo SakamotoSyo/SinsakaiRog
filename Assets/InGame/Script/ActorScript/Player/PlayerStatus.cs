@@ -71,12 +71,25 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     }
 
     /// <summary>
+    /// èD‚ğ‚·‚×‚ÄÌ‚Ä‚é
+    /// </summary>
+    public void DiscardAllHandCards() 
+    {
+        for (int i = 0; i < _handCardList.Count; i++) 
+        {
+            _graveyardCards.Add(_handCardList[i]);
+        }
+        _handCardList.Clear();
+    } 
+
+    /// <summary>
     /// ƒJ[ƒh‚ğÌ‚ÄD‚É‰Á‚¦‚éˆ—
     /// </summary>
     /// <param name="cardBase"></param>
-    public void GraveyardCardsAdd(CardBaseClass cardBase) 
+    public void GraveyardCardsAdd(CardBaseClass cardBase)
     {
         _graveyardCards.Add(cardBase);
+        _handCardList.Remove(cardBase);
     }
 
     /// <summary>
