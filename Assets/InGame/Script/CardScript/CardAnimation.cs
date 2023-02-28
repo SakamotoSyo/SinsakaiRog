@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 [Serializable]
 public class CardAnimation 
@@ -11,6 +12,7 @@ public class CardAnimation
     [Tooltip("ƒhƒ[‚µ‚½Û‚ÌAnimation‚ÌPosition‚ð•Ï‚¦‚ê‚é")]
     [SerializeField] private Vector3 _drawAnimOffSet;
     [SerializeField] private CardEvent _cardEvent;
+    [SerializeField] private Vector3 _ThrowPos;
     private Transform _parentTransform;
     private Tween _tween;
 
@@ -39,10 +41,17 @@ public class CardAnimation
 
     public void DrawAnim(Transform transform) 
     {
-       _tween = DOTween.To(() => transform.transform.localPosition - _parentTransform.localPosition - _drawAnimOffSet,
-            x => transform.transform.localPosition = x,
-            transform.transform.localPosition, 0.5f)
+       _tween = DOTween.To(() => transform.localPosition - _parentTransform.localPosition - _drawAnimOffSet,
+            x => transform.localPosition = x,
+            transform.localPosition, 0.5f)
             .OnStart(() => _cardEvent.enabled = false)
             .OnComplete(() => _cardEvent.enabled = true);
+    }
+
+    public async UniTask ThrowAnim(Transform transform) 
+    {
+       await DOTween.To(() => transform.localPosition,
+            x => transform.localPosition = x,
+            _ThrowPos, 0.6f);
     }
 }
