@@ -5,10 +5,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EventData", menuName = "SakamotoScriptable/SakamotoData")]
 public class EventSelectDataScript : ScriptableObject
 {
-    [SerializeField] private string _eventName;
     public string EventDescription => _eventDescription;
-    [SerializeField] private string _eventDescription;
+    public int ProbabilitySuccess => _probabilitySuccess;
+    public string[] EventResults => _eventResults;
     public IEventSelect EventEffect => _eventEffect;
+
+    [SerializeField] private string _eventName;
+    [SerializeField] private string _eventDescription;
+    private int _probabilitySuccess;
+    [SerializeField] private string[] _eventResults = new string[2];
     [SerializeReference, SubclassSelector]
     [SerializeField] private IEventSelect _eventEffect;
 
@@ -20,5 +25,15 @@ public class EventSelectDataScript : ScriptableObject
     public void SetEventDescription(string st) 
     {
         _eventDescription = st;
+    }
+
+    public void SetProbabilitySuccess(int Probability) 
+    {
+        _probabilitySuccess = Probability;
+    }
+
+    public void SetEventResultsTextArray(string[] stArray) 
+    {
+        _eventResults = stArray;
     }
 }

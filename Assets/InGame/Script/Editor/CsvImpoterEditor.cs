@@ -56,16 +56,19 @@ public class CsvImpoterEditor : Editor
             float[] floats = new float[_floatLoopNum];
             floats[0] = float.Parse(parts[2]);
             floats[1] = float.Parse(parts[4]);
+            var gold = int.Parse(parts[7]);
 
             List<EffectData> effectList = new List<EffectData>();
+            var enhansmentData = parts[8].Split('_');
             //ここのマジックナンバー後で修正
-            for (int j = 7; j < parts.Length; j++)
+            for (int j = 9; j < parts.Length; j++)
             {
                 var data = parts[j].Split('_');
                 effectList.Add(new EffectData(MakeClass<IEffect>(data[0] + ", Assembly-CSharp"), float.Parse(data[1])));
             }
             Debug.Log(id);
-            cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1],parts[5], null, effectList);
+            cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1],parts[5], null
+                , gold, new EnhancementData(enhansmentData[0], enhansmentData[1]), effectList);
             var asset = (CardBaseClass)AssetDatabase.LoadAssetAtPath(path, typeof(CardBaseClass));
 
 
@@ -115,6 +118,10 @@ public class CsvImpoterEditor : Editor
             var eventSelectCs = CreateInstance<EventSelectDataScript>();
             eventSelectCs.SetEventName(parts[0]);
             eventSelectCs.SetEventDescription(parts[1]);
+            eventSelectCs.SetProbabilitySuccess(int.Parse(parts[2]));
+            string[] eventResultsArray = parts[3].Split('_');
+            Debug.Log(eventResultsArray[0]);
+            eventSelectCs.SetEventResultsTextArray(eventResultsArray);
 
             var asset = (CardBaseClass)AssetDatabase.LoadAssetAtPath(path, typeof(CardBaseClass));
             if (asset == null)
