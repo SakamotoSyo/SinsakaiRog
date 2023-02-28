@@ -10,7 +10,7 @@ public class EnemyStatusView : ActorViewBase
     [Tooltip("攻撃のアイコンを生成する場所")]
     [SerializeField] private GameObject _attackIconInsPos;
     [Tooltip("攻撃のアイコンの元となるPrefab")]
-    [SerializeField] private GameObject _attackPrefab;
+    [SerializeField] private GameObject _attackIconPrefab;
     private List<IconScript> _iconScriptList = new(); 
     public override void SetHpCurrent(float currentHp)
     {
@@ -23,8 +23,9 @@ public class EnemyStatusView : ActorViewBase
     /// <param name="effectData"></param>
     public void SetAttackIcon(EnemyEffectData effectData) 
     {
-        var icon = Instantiate(_attackPrefab).GetComponent<IconScript>();
+        var icon = Instantiate(_attackIconPrefab).GetComponent<IconScript>();
         _iconScriptList.Add(icon);
+        icon.SetEffectPower(effectData.EffectPower);
         icon.transform.SetParent(_attackIconInsPos.transform);
         icon.SetImage(GetIconSprite(effectData.ImageType));
     }
