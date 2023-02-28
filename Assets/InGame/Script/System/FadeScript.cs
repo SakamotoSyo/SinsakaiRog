@@ -18,16 +18,17 @@ public class FadeScript : SingletonBehaviour<FadeScript>
         
     }
 
-    public void FadeOut() 
+    public async UniTask FadeOut() 
     {
         _fadeImage.enabled = true;
         _anim.SetTrigger(_fadeOut);
+        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
     }
 
     public async UniTask FadeIn() 
     {
         _anim.SetTrigger(_fadeIn);
-        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f);
         _fadeImage.enabled = false;
     }
 

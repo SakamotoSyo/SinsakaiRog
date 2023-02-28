@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class ActorAnimBase
 {
@@ -18,9 +19,10 @@ public class ActorAnimBase
         _anim.SetTrigger(_downParm);
     }
 
-    public void AttackAnim()
+    public async UniTask AttackAnim()
     {
         _anim.SetTrigger(_attackParm);
+        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
     }
 
     public void DownAnim()
