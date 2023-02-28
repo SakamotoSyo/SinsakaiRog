@@ -52,7 +52,7 @@ public abstract class StatusModelBase : IStatusBase
     //TODO;override‚µ‚Ä³í‚É“®‚­‚©ƒeƒXƒg‚·‚é
     public virtual void AddDamage(float value) 
     {
-        var num = value - _defence.Value;
+        var num = (int)value - _defence.Value;
 
         if (0 < num)
         {
@@ -62,7 +62,7 @@ public abstract class StatusModelBase : IStatusBase
         }
         else 
         {
-           _defence.Value = num * -1;
+            _defence.Value = num * -1;
         }
     }
 
@@ -72,6 +72,10 @@ public abstract class StatusModelBase : IStatusBase
         _currentHp.Value = healNum;
     }
 
+    /// <summary>
+    /// –hŒä‚ğã¸‚³‚¹‚é
+    /// </summary>
+    /// <param name="num"></param>
     public void DefenseIncrease(float num)
     {
         _defence.Value += num;
