@@ -65,6 +65,7 @@ public class BattleStateManager : MonoBehaviour
     {
         if (value <= 0)
         {
+            Time.timeScale = 0.3f;
             _stateMachine.Dispatch((int)BattleEvent.BattleResult);
         }
     }
