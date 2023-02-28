@@ -51,11 +51,6 @@ public class DataBaseScript : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-
-    }
-
     private void CardDataInit() 
     {
         StringReader sr = new StringReader(_cardData.text);
@@ -100,8 +95,7 @@ public class DataBaseScript : MonoBehaviour
         //最初の行はスキップ
         sr.ReadLine();
 
-        //TODO:データの数だけforが周りようにする
-        for (int i = 0; i < 1; i++) 
+        while(true)
         {
             string line = sr.ReadLine();
 
@@ -113,14 +107,16 @@ public class DataBaseScript : MonoBehaviour
             string[] parts = line.Split(',');
             float MaxHp = float.Parse(parts[1]);
             int BaseLevel = int.Parse(parts[2]);
+            string ActionNum = parts[3];
             List<EnemyEffectData> enemyEffectDatas = new List<EnemyEffectData>();
 
-            for (int j = 3; j < parts.Length; j++) 
+            for (int j = 4; j < parts.Length; j++) 
             {
                 var effect = parts[j].Split('_');
+                Debug.Log(effect[0]);
                 enemyEffectDatas.Add(new EnemyEffectData(MakeClass<IEffect>(effect[0]), Enum.Parse<TargetType>(effect[1]), Enum.Parse<EffectTypeImage>(effect[3]), float.Parse(effect[2])));
             }
-            EnemyStatusData enemyStatusData = new EnemyStatusData(parts[0], MaxHp, BaseLevel, enemyEffectDatas);
+            EnemyStatusData enemyStatusData = new EnemyStatusData(parts[0], MaxHp, BaseLevel, ActionNum, enemyEffectDatas);
 
             _enemyStatusData.Add(enemyStatusData);
         }
@@ -194,6 +190,24 @@ public class CardSpriteData
     
 }
 
+public struct EnemyStatusData
+{
+    public string ActionNum;
+    public string Name;
+    public int BaseCurrentLevel;
+    public float MaxHp;
+    public List<EnemyEffectData> enemyEffectDataList;
+
+    public EnemyStatusData(string name, float maxHp, int baseCurrentLevel,string actionNum, List<EnemyEffectData> effectList)
+    {
+        enemyEffectDataList = new List<EnemyEffectData>(effectList);
+        Name = name;
+        MaxHp = maxHp;
+        BaseCurrentLevel = baseCurrentLevel;
+        ActionNum = actionNum;
+    }
+}
+
 public enum ImageType 
 {
     Slash,
@@ -201,4 +215,8 @@ public enum ImageType
     Draw,
     DefenceBreak,
     Strategy,
+    Strike,
+    Punch,
+    Avert,
+    Charge,
 }
