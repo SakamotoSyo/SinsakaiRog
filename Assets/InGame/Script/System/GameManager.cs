@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Œ»İ‚ÌŠK‘w")]
     private static int currentLevel = 1;
     private static float score;
-    private static PlayerStatusSaveData saveData;
+    private static PlayerStatusSaveData saveData = new();
 
     void Start()
     {

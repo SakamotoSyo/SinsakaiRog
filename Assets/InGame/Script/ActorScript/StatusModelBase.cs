@@ -7,12 +7,12 @@ using System;
 public abstract class StatusModelBase : IStatusBase
 {
     public float MaxHpNum => _maxHp.Value;
-    protected ReactiveProperty<float> _maxHp = new ReactiveProperty<float>();
+    protected ReactiveProperty<float> _maxHp = new();
     public float CurrentHpNum => _currentHp.Value; 
-    protected ReactiveProperty<float> _currentHp = new ReactiveProperty<float>();
-    protected ReactiveProperty<float> _attack = new ReactiveProperty<float>();
+    protected ReactiveProperty<float> _currentHp = new();
+    protected ReactiveProperty<float> _attack = new();
     public float DefenceNum => _defence.Value;
-    protected ReactiveProperty<float> _defence = new ReactiveProperty<float>();
+    protected ReactiveProperty<float> _defence = new();
 
     public virtual void Init() 
     {
@@ -79,6 +79,7 @@ public abstract class StatusModelBase : IStatusBase
     public void DefenseIncrease(float num)
     {
         _defence.Value += num;
+        AudioManager.Instance.PlaySound(SoundPlayType.Guard);
     }
 
     public IObservable<float> GetDefeceOb()

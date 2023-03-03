@@ -55,8 +55,6 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
                 }
                 _graveyardCards.Clear();
                 _handCardList.Add(_deckCardList[0]);
-                _deckCardList.RemoveAt(0);
-                Debug.Log(_deckCardList.Count);
             }
             else if (_deckCardList.Count == 0 && _graveyardCards.Count == 0)
             {
@@ -179,7 +177,7 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
 
     public PlayerStatusSaveData GetPlayerSaveData() 
     {
-        PlayerStatusSaveData saveData = new PlayerStatusSaveData();
+        PlayerStatusSaveData saveData = new();
         saveData.MaxHp = _maxHp.Value;
         saveData.Currenthp = _currentHp.Value;
         saveData.Defence = _defence.Value;
@@ -194,7 +192,7 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
 
         for (int i = 0; i < _graveyardCards.Count; i++) 
         {
-            //saveData.DeckCardList.Add(_graveyardCards[i]);
+            saveData.DeckCardList.Add(_graveyardCards[i]);
         }
         return saveData;
     }
