@@ -8,6 +8,7 @@ public class PlayerAttackState : State
     private readonly float _trunAnimTime = 2;
     protected override async void OnEnter(State currentState)
     {
+        AudioManager.Instance.PlaySound(SoundPlayType.TurnSwitching);
         Owner.BattleStateView.TurnAnim(this);
         await UniTask.Delay(TimeSpan.FromSeconds(_trunAnimTime));
         Owner.BattleStateView.StopButton(false);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerPresenterName;
+using Cysharp.Threading.Tasks;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     /// <param name="damage"></param>
     public void AddDamage(float damage)
     {
+        AudioManager.Instance.PlaySound(SoundPlayType.EnemyAttack);
         if (_statusBase.DownJudge(damage))
         {
             _statusBase.AddDamage(damage);
@@ -33,8 +35,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            _statusBase.AddDamage(damage);
             _playerAnim.DownAnim();
-
         }
     }
 
@@ -64,6 +66,9 @@ public class PlayerController : MonoBehaviour
         _playerStatus.AddGold(gold);
     }
 
+    /// <summary>
+    /// ターンの終わりに手札のカードをすべて捨てる処理
+    /// </summary>
     public void PlayerTurnEnd() 
     {
        _playerStatus.DiscardAllHandCards();

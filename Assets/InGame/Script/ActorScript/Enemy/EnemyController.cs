@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     /// <param name="damage"></param>
     public void AddDamage(float damage)
     {
+        AudioManager.Instance.PlaySound(SoundPlayType.PlayerAttack);
         if (_statusBase.DownJudge(damage))
         {
             _statusBase.AddDamage(damage);

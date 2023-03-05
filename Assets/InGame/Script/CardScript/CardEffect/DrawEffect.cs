@@ -7,5 +7,6 @@ public class DrawEffect : IEffect
     public void UseEffect(PlayerController playCon, EnemyController enemyCon, float power, TargetType targetType)
     {
         playCon.DrawCard(power);
+        AudioManager.Instance.PlaySound(SoundPlayType.SpecialAttack);
     }
 }
