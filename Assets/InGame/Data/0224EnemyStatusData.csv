@@ -1,0 +1,3 @@
+﻿名前,最大Hp,ベースの階層,行動回数,"Enemyの行動パターン,狙う対象,効果の数字,Image,"
+リノ,20,1,1,AttackEffect_Player_15_Attack,DefenceEffect_Enemy_5_Defence
+スケルトン,10,1,1~2,AttackEffect_Player_10_Attack,DefenceEffect_Enemy_3_Defence
