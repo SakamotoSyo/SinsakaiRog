@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 public class PlayerController : MonoBehaviour
 {
     public IPlayerStatus PlayerStatus => _playerStatus;
+    public PlayerAnim PlayerAnim => _playerAnim;
 
     private IPlayerStatus _playerStatus;
     [SerializeField] private PlayerAnim _playerAnim = new();
@@ -17,7 +18,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _playerStatus = PlayerPresenter.PlayerStatus;
         _statusBase = _playerStatus.GetStatusBase();
     }
 
@@ -91,5 +91,10 @@ public class PlayerController : MonoBehaviour
     public void ResetCost()
     {
         _playerStatus.ResetCost();
+    }
+
+    public void SetPlayerStatus(IPlayerStatus player) 
+    {
+        _playerStatus = player;
     }
 }

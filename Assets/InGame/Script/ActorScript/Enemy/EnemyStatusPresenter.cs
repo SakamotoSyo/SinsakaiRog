@@ -7,15 +7,15 @@ using VContainer;
 public class EnemyStatusPresenter : IStartable, IDisposable
 {
     private EnemyStatusView _enemyView;
-    public static IEnemyStatus EnemyStatus => _enemyStatusModel;
-    private static IEnemyStatus _enemyStatusModel;
+    private IEnemyStatus _enemyStatusModel;
     private CompositeDisposable _compositeDisposable = new();
 
     [Inject]
-    public EnemyStatusPresenter(IEnemyStatus enemyStaus, EnemyStatusView enemyStatusView) 
+    public EnemyStatusPresenter(IEnemyStatus enemyStatus, EnemyStatusView enemyStatusView, EnemyController enemyController) 
     {
-        _enemyStatusModel = enemyStaus;
+        _enemyStatusModel = enemyStatus;
         _enemyView = enemyStatusView;
+        enemyController.SetEnemyStatus(enemyStatus);
     }
 
     void IStartable.Start()

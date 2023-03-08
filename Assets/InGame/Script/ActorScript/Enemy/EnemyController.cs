@@ -14,7 +14,6 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
-        _enemyStatus = EnemyStatusPresenter.EnemyStatus;
         _statusBase = _enemyStatus.GetStatusBase();
     }
 
@@ -57,5 +56,10 @@ public class EnemyController : MonoBehaviour
             _enemyStatus.AttackDecisionReset();
             await _enemyAnim.AttackAnim();
         }
+    }
+
+    public void SetEnemyStatus(IEnemyStatus enemyStatus) 
+    {
+        _enemyStatus = enemyStatus;
     }
 }

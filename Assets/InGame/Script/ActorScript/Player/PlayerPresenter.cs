@@ -1,23 +1,23 @@
-using UnityEngine;
-using UniRx;
-using VContainer.Unity;
-using VContainer;
 using System;
+using UniRx;
+using VContainer;
+using VContainer.Unity;
 
 namespace PlayerPresenterName
 {
     public class PlayerPresenter : IStartable, IDisposable
     {
         private PlayerView _playerView;
-        public static IPlayerStatus PlayerStatus => _playerStauts;
-        private static IPlayerStatus _playerStauts;
+        private IPlayerStatus _playerStauts;
         private CompositeDisposable _compositeDisposable = new();
 
         [Inject]
-        public PlayerPresenter(PlayerView playerView, IPlayerStatus playerStatus)
+        public PlayerPresenter(PlayerView playerView, IPlayerStatus playerStatus, PlayerController playerController)
         {
             _playerView = playerView;
             _playerStauts = playerStatus;
+            playerController.SetPlayerStatus(playerStatus);
+           
         }
 
         public void Start()
