@@ -11,7 +11,11 @@ public class BattleStateManager : MonoBehaviour
     public PlayerController PlayerController => _playerCon;
     public EnemyController EnemyController => _enemyCon;
     public BattleStateView BattleStateView => _battleStateView;
+    public Animator GameOverAnim => _gameOverAnim;
+    public GameObject GameOverObj => _gameOverObj;
 
+    [SerializeField] private GameObject _gameOverObj;
+    [SerializeField] private Animator _gameOverAnim;
     [SerializeField] private BattleStateView _battleStateView;
     [SerializeField] private ActorGenerator _generator;
     [SerializeField] private ResultCanvasManager _resultManager;
@@ -28,6 +32,7 @@ public class BattleStateManager : MonoBehaviour
         PlayerAttack,
         EnemyAttack,
         BattleResult,
+        GameOver,
     }
 
     private async void Start()
@@ -42,9 +47,11 @@ public class BattleStateManager : MonoBehaviour
         _stateMachine.AddTransition<PlayerAttackState, EnemyAttackState>((int)BattleEvent.EnemyAttack);
         _stateMachine.AddTransition<EnemyAttackState, DrawState>((int)BattleEvent.Draw);
         _stateMachine.AddAnyTranstion<BattleResultState>((int)BattleEvent.BattleResult);
+        _stateMachine.AddAnyTranstion<GameOverState>((int)BattleEvent.GameOver);
         //一番最初のステートを始める
         _stateMachine.Start<BattleStartState>();
         _enemyCon.EnemyStatus.GetStatusBase().GetCurrentHpOb().Subscribe(ToBattleResult).AddTo(this);
+        _playerCon.PlayerStatus.GetStatusBase().GetCurrentHpOb().Subscribe(ToGameOverState).AddTo(this);
     }
 
     void Update()
@@ -67,6 +74,15 @@ public class BattleStateManager : MonoBehaviour
         {
             Time.timeScale = 0.3f;
             _stateMachine.Dispatch((int)BattleEvent.BattleResult);
+        }
+    }
+
+    public void ToGameOverState(float value) 
+    {
+        if(value <= 0) 
+        {
+            Time.timeScale = 0.3f;
+            _stateMachine.Dispatch((int)BattleEvent.GameOver);
         }
     }
 }
