@@ -8,10 +8,12 @@ using PlayerPresenterName;
 public class PlayerLifeTimeScope : LifetimeScope
 {
     [SerializeField] private PlayerView _playerView;
+    [SerializeField] private PlayerController _playerController;
     protected override void Configure(IContainerBuilder builder)
     {
         builder.Register<IPlayerStatus, PlayerStatus>(Lifetime.Singleton);
         builder.RegisterComponent(_playerView);
+        builder.RegisterComponent(_playerController);
         builder.RegisterEntryPoint<PlayerPresenter>(Lifetime.Singleton);
     }
 
