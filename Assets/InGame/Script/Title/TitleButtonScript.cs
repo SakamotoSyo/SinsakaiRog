@@ -16,4 +16,13 @@ public class TitleButtonScript : MonoBehaviour,IPointerEnterHandler, IPointerExi
     {
         _uiOutLine.enabled = false;
     }
+
+    public void EndGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();//ゲームプレイ終了
+#endif
+    }
 }
