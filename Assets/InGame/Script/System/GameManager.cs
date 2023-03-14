@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static PlayerStatusSaveData SaveData => saveData;
 
     [Tooltip("現在の階層")]
-    private static int currentLevel = 1;
+    private static int currentLevel = 0;
     private static float score;
     private static PlayerStatusSaveData saveData = new();
 
@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
         currentLevel++;
     }
 
+    public static void ResetCurrentLevel() 
+    {
+        currentLevel = 0;
+    }
+
     public static void GameOver() 
     {
         //リザルトのシーンを呼び出す
@@ -44,32 +49,5 @@ public class GameManager : MonoBehaviour
     public static void SavePlayerData(PlayerStatusSaveData save) 
     {
         saveData = save;
-    }
-
-    public static void SavePlayerData<T>(T saveData, PlayerStatusSaveType saveType) 
-    {
-        switch (saveType)
-        {
-            case PlayerStatusSaveType.MaxHp:
-                break;
-            case PlayerStatusSaveType.CurrentHp:
-                break;
-            case PlayerStatusSaveType.Defence:
-                break;
-            case PlayerStatusSaveType.MaxCost:
-                break;
-            case PlayerStatusSaveType.Nowcost:
-                break;
-            case PlayerStatusSaveType.Gold:
-                break;
-            case PlayerStatusSaveType.HandCardList:
-                break;
-            case PlayerStatusSaveType.DeckCardList:
-                break;
-            case PlayerStatusSaveType.GraveyardCards:
-                break;
-            default:
-                break;
-        }
     }
 }
