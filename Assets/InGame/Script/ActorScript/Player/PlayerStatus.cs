@@ -29,7 +29,6 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
 
     public override void Init()
     {
-        base.Init();
         SetPlayerSaveData(GameManager.SaveData);
 
     }
@@ -180,7 +179,6 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
         PlayerStatusSaveData saveData = new();
         saveData.MaxHp = _maxHp.Value;
         saveData.Currenthp = _currentHp.Value;
-        saveData.Defence = _defence.Value;
         saveData.Nowcost = _cost.Value;
         saveData.MaxCost = _maxCost;
         saveData.Gold = _gold.Value;
@@ -205,7 +203,6 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     {
         _maxHp.Value = playerData.MaxHp;
         _currentHp.Value = playerData.Currenthp;
-        _defence.Value = playerData.Defence;
         _cost.Value = playerData.Nowcost;
         _maxCost = playerData.MaxCost;
         _gold.Value = playerData.Gold;

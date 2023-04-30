@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 
 //改善点
@@ -18,11 +19,11 @@ public class StateMachine<TOwner>
         /// <summary>このステートのオーナー</summary>
         protected TOwner Owner => stateMachine.Owner;
 
-        internal void Enter(State currentState) 
+        internal void Enter(State currentState, CancellationToken token) 
         {
-            OnEnter(currentState);
+            OnEnter(currentState, token);
         }
-        protected virtual void OnEnter(State currentState) { }
+        protected virtual void OnEnter(State currentState, CancellationToken token) { }
 
         internal void Update() 
         {
@@ -114,10 +115,18 @@ public class StateMachine<TOwner>
         AddTransition<AnyState, Tto>(eventId);
     }
 
-    public void Start(State firstState) 
+    /// <summary>
+    /// ステートマシンの実行を開始する（ジェネリック版）
+    /// </summary>
+    public void Start<TFirst>(CancellationToken token) where TFirst : State, new()
+    {
+        Start(GetOrAddState<TFirst>(), token);
+    }
+
+    public void Start(State firstState, CancellationToken token) 
     {
        CurrentState = firstState;
-        CurrentState.Enter(null);
+        CurrentState.Enter(null, token);
     }
 
     public void Update() 
@@ -129,7 +138,7 @@ public class StateMachine<TOwner>
     /// 遷移イベントを発行する
     /// </summary>
     /// <param name="eventId">イベントID</param>
-    public void Dispatch(int eventId) 
+    public void Dispatch(int eventId, CancellationToken Token) 
     {
         State to;
 
@@ -141,17 +150,17 @@ public class StateMachine<TOwner>
             }
         }
 
-        Change(to);
+        Change(to, Token);
     }
 
     /// <summary>
     /// ステートを変更する
     /// </summary>
     /// <param name="nextState">遷移先のステート</param>
-    public void Change(State nextState) 
+    public void Change(State nextState, CancellationToken Token) 
     {
         CurrentState.Exit(nextState);
-        nextState.Enter(null);
+        nextState.Enter(null, Token);
         CurrentState = nextState;
     }
 }

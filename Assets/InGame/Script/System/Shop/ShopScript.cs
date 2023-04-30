@@ -14,7 +14,6 @@ public class ShopScript : MonoBehaviour
     [Tooltip("ÉJÅ[ÉhèúãéÇÃPrefab")]
     [SerializeField] private GameObject _cardRemoval;
     [SerializeField] private Vector3 _shopPos;
-    [SerializeField] private Animator _shopAnim;
     private void Start()
     {
 

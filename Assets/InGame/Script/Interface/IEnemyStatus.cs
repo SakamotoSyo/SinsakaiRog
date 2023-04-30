@@ -10,4 +10,5 @@ public interface IEnemyStatus
     public void AttackDecision();
     public void AttackDecisionReset();
     public void StatusSet(EnemyStatusData enemy);
+    public ReactiveCollection<EnemyEffectData> GetEnemyTurnEffect();
 }

@@ -19,6 +19,7 @@ public interface IPlayerStatus
     public void AddGold(float gold);
     public bool UseGold(float gold);
     public void DeckInit();
+    public void DiscardAllHandCards();
     public void DrawCard(float num = 1);
     public void AddDeckCard(CardBaseClass cardBase);
     public void GraveyardCardsAdd(CardBaseClass cardBase);

@@ -11,6 +11,7 @@ public interface IStatusBase
     public float GetDefenceNum();
     public float GetMaxHpNum();
     public float GetCurrentHpNum();
+    public void ChangeValueDefense(float value);
     public void AddDamage(float damage);
     public void Healing(float damage);
     public void DefenseIncrease(float num);

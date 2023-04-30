@@ -6,6 +6,6 @@ public class TitleScript : MonoBehaviour
 {
     public void MainScene() 
     {
-        LoadSceneManager.ToBattleScene();
+        LoadSceneManager.ToDownTheStairsScene();
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class EnemyController : MonoBehaviour
 {
@@ -9,11 +10,13 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private EnemyAnimaiton _enemyAnim = new();
     private EnemyAttack _enemyAttack = new();
+    private CancellationTokenSource _cancellationToken;
     private IEnemyStatus _enemyStatus;
     private IStatusBase _statusBase;
 
     private void Start()
     {
+        _cancellationToken = new CancellationTokenSource();
         _statusBase = _enemyStatus.GetStatusBase();
     }
 
@@ -54,7 +57,7 @@ public class EnemyController : MonoBehaviour
             Debug.Log(_enemyStatus.GetEnemyTurnEffectOb().Count);
             _enemyAttack.AttackEffect(player, this, _enemyStatus.GetEnemyTurnEffectOb()[0]);
             _enemyStatus.AttackDecisionReset();
-            await _enemyAnim.AttackAnim();
+            await _enemyAnim.AttackAnim(_cancellationToken.Token);
         }
     }
 

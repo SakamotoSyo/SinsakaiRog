@@ -9,7 +9,7 @@ public class ItemButtonEffectScript : MonoBehaviour
     private float _gold;
     void Start()
     {
-        _playerStaus = PlayerPresenter.PlayerStatus;
+        Debug.Log("‚¤‚í‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ");
     }
 
     /// <summary>

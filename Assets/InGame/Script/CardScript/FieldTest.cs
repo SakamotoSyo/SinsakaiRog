@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 public class FieldTest : MonoBehaviour
 {
@@ -12,11 +14,13 @@ public class FieldTest : MonoBehaviour
     private GameObject _controller;
     private PlayerController _playCon;
     private EnemyController _enemyCon;
+    private CancellationToken _cancellationToken;
 
     private void Start()
     {
         _playCon = _actorGenerator.PlayerController;
         _enemyCon = _actorGenerator.EnemyController;
+        _cancellationToken = this.GetCancellationTokenOnDestroy();
     }
 
     private void Update()
@@ -37,6 +41,7 @@ public class FieldTest : MonoBehaviour
             if (_playCon.UseCost(card.CardCost)) 
             {
                 card.UseEffect(_playCon, _enemyCon, card.Tartget);
+                _playCon.PlayerAnim.AttackAnim(_cancellationToken).Forget();
                 _playCon.PlayerStatus.GraveyardCardsAdd(card);
                 //OutLineも生成
                 Instantiate(_particleObj, Camera.main.ScreenToWorldPoint(Input.mousePosition

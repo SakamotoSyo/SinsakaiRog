@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using System;
 
 public class ShopButtonScript : MonoBehaviour
@@ -11,8 +12,9 @@ public class ShopButtonScript : MonoBehaviour
     [SerializeField] private Image _soldOutImage;
     [SerializeField] private Button _shopButton;
     [SerializeField] private Text _moneyText;
+    [SerializeField] private AudioSource _audioSource;
     [Tooltip("Goldが足りなかったときに使う")]
-    [SerializeField] private GameObject _warningObj;
+    [SerializeField] private Animator _warnimgAnim;
     private IPlayerStatus _playerStatus;
     private Action _closeAction;
 
@@ -27,19 +29,19 @@ public class ShopButtonScript : MonoBehaviour
 
     public void Buy() 
     {
-        //テストでゴールドを増やす
-        _playerStatus.AddGold(100);
         if (_playerStatus.UseGold(_cardController.CardBaseClass.Gold))
         {
-            _playerStatus.AddDeckCard(_cardController.CardBaseClass);
+            _audioSource.Play();
+            var card = new CardBaseClass();
+            card.Init(_cardController.CardBaseClass);
+            _playerStatus.AddDeckCard(card);
             _soldOutImage.enabled = true;
             _shopButton.enabled = false;
         }
         else 
         {
-            _warningObj.SetActive(true);
-        }
-       
+            _warnimgAnim.SetTrigger("WarningAnim");
+        }  
     }
 
     /// <summary>

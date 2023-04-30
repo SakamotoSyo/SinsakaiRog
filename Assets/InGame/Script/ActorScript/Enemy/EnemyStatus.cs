@@ -50,7 +50,6 @@ public class EnemyStatus : StatusModelBase, IEnemyStatus
         }
         else 
         {
-            Debug.Log(_actionNum);
             actionNum = int.Parse(_actionNum);
         }
 

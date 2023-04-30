@@ -34,7 +34,6 @@ public class DataBaseScript : MonoBehaviour
             CardDataInit();
             EnemyDataInit();
             PlayerDataInit();
-            Debug.Log("Dataの初期化");
             _isInit = true;
         }
     }
@@ -46,7 +45,6 @@ public class DataBaseScript : MonoBehaviour
             CardDataInit();
             EnemyDataInit();
             PlayerDataInit();
-            Debug.Log("Dataの初期化");
             _isInit = true;
         }
     }
@@ -88,14 +86,14 @@ public class DataBaseScript : MonoBehaviour
 
     }
 
-    public void EnemyDataInit() 
+    public void EnemyDataInit()
     {
         StringReader sr = new StringReader(_enemyData.text);
 
         //最初の行はスキップ
         sr.ReadLine();
 
-        while(true)
+        while (true)
         {
             string line = sr.ReadLine();
 
@@ -110,7 +108,7 @@ public class DataBaseScript : MonoBehaviour
             string ActionNum = parts[3];
             List<EnemyEffectData> enemyEffectDatas = new List<EnemyEffectData>();
 
-            for (int j = 4; j < parts.Length; j++) 
+            for (int j = 4; j < parts.Length; j++)
             {
                 var effect = parts[j].Split('_');
                 Debug.Log(effect[0]);
@@ -120,6 +118,8 @@ public class DataBaseScript : MonoBehaviour
 
             _enemyStatusData.Add(enemyStatusData);
         }
+
+        Debug.Log(_enemyStatusData[0]);
     }
 
     public void PlayerDataInit() 
@@ -130,7 +130,7 @@ public class DataBaseScript : MonoBehaviour
         playerData.MaxCost = 3;
         playerData.Nowcost = playerData.MaxCost;
         var deckList = new List<CardBaseClass>();
-        deckList.Add(CardBaseClassList[CardBaseClassList.Count - 1]);
+        deckList.Add(NewCard(CardBaseClassList[CardBaseClassList.Count - 1]));
         for (int i = 0; i < 4; i++)
         {
             deckList.Add(NewCard(CardBaseClassList[0]));
@@ -166,6 +166,11 @@ public class DataBaseScript : MonoBehaviour
     public static CardBaseClass GetRandomCard() 
     {
         return _cardList[UnityEngine.Random.Range(0, _cardList.Count)];
+    }
+
+    public static void ResetInit()
+    {
+        _isInit = false;
     }
 
     /// <summary>

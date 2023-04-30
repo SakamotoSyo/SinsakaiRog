@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class ActorAnimBase
 {
@@ -19,10 +20,11 @@ public class ActorAnimBase
         _anim.SetTrigger(_downParm);
     }
 
-    public async UniTask AttackAnim()
+    public async UniTask AttackAnim(CancellationToken token)
     {
         _anim.SetTrigger(_attackParm);
-        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f, 
+                                cancellationToken: token);
     }
 
     public void DownAnim()
@@ -30,12 +32,12 @@ public class ActorAnimBase
         _anim.SetTrigger(_downAnim);
     }
 
-    public virtual void ActiveDefence() 
+    public virtual void ActiveDefence()
     {
         _defenceAnim.SetTrigger("Active");
     }
 
-    public virtual void LostDefence() 
+    public virtual void LostDefence()
     {
         _defenceAnim.SetTrigger("Lost");
     }

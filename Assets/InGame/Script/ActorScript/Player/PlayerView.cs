@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 
 public class PlayerView : ActorViewBase
@@ -11,18 +12,20 @@ public class PlayerView : ActorViewBase
     [SerializeField] private Text _deckText;
     [SerializeField] private GameObject _cardParentObj;
     [SerializeField] private GameObject _cardPrefab;
+    [SerializeField] private Animator _costEffectAnim;
+    [SerializeField] private Text _costEffectText;
 
     private void Start()
     {
-        
+
     }
 
     private void Update()
     {
-        
+
     }
 
-    public void DrawView(CardBaseClass card) 
+    public void DrawView(CardBaseClass card)
     {
         var obj = Instantiate(_cardPrefab, _cardParentObj.transform.position, Quaternion.identity);
         obj.transform.SetParent(_cardParentObj.transform);
@@ -30,18 +33,31 @@ public class PlayerView : ActorViewBase
         cardController.CardAnimation.SetParentTransform(_cardParentObj.transform);
         cardController.SetCardBaseClass(card);
     }
-    public void GraveyardCardsView(int count) 
+    public void GraveyardCardsView(int count)
     {
-       _discardedText.text = count.ToString();
+        _discardedText.text = count.ToString();
     }
 
-    public void DeckCardView(int count) 
+    public void DeckCardView(int count)
     {
         _deckText.text = count.ToString();
     }
 
-    public void SetCostText(float cost) 
+    public async void SetCostText(float cost)
     {
-        _costText.text = cost.ToString();
+        if (int.Parse(_costText.text) < cost)
+        {
+            var token = this.GetCancellationTokenOnDestroy();
+            _costEffectText.enabled = true;
+            _costEffectText.text = (cost - int.Parse(_costText.text)).ToString("0");
+            _costText.text = cost.ToString();
+            _costEffectAnim.SetTrigger("CostEffect");
+            await UniTask.WaitUntil(() => _costEffectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+            _costEffectText.enabled = false;
+        }
+        else 
+        {
+            _costText.text = cost.ToString();
+        }
     }
 }

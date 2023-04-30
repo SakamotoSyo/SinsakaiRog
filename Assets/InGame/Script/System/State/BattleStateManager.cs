@@ -2,7 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
-using State = StateMachine<BattleStateManager>.State;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class BattleStateManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class BattleStateManager : MonoBehaviour
     private bool _isStart = false;
     private StateMachine<BattleStateManager> _stateMachine;
     private PlayerController _playerCon;
+    private CancellationTokenSource _cancellationToken;
     private EnemyController _enemyCon;
 
     public enum BattleEvent
@@ -37,6 +39,7 @@ public class BattleStateManager : MonoBehaviour
 
     private async void Start()
     {
+        _cancellationToken = new CancellationTokenSource();
         await FadeScript.Instance.FadeIn();
         _isStart = true;
         _playerCon = _generator.PlayerController;
@@ -49,7 +52,7 @@ public class BattleStateManager : MonoBehaviour
         _stateMachine.AddAnyTranstion<BattleResultState>((int)BattleEvent.BattleResult);
         _stateMachine.AddAnyTranstion<GameOverState>((int)BattleEvent.GameOver);
         //一番最初のステートを始める
-        _stateMachine.Start<BattleStartState>();
+        _stateMachine.Start<BattleStartState>(_cancellationToken.Token);
         _enemyCon.EnemyStatus.GetStatusBase().GetCurrentHpOb().Subscribe(ToBattleResult).AddTo(this);
         _playerCon.PlayerStatus.GetStatusBase().GetCurrentHpOb().Subscribe(ToGameOverState).AddTo(this);
     }
@@ -65,7 +68,7 @@ public class BattleStateManager : MonoBehaviour
 
     public void ToEnemyTrun()
     {
-        _stateMachine.Dispatch((int)BattleEvent.EnemyAttack);
+        _stateMachine.Dispatch((int)BattleEvent.EnemyAttack, _cancellationToken.Token);
     }
 
     public void ToBattleResult(float value)
@@ -73,7 +76,7 @@ public class BattleStateManager : MonoBehaviour
         if (value <= 0)
         {
             Time.timeScale = 0.3f;
-            _stateMachine.Dispatch((int)BattleEvent.BattleResult);
+            _stateMachine.Dispatch((int)BattleEvent.BattleResult, _cancellationToken.Token);
         }
     }
 
@@ -82,7 +85,12 @@ public class BattleStateManager : MonoBehaviour
         if(value <= 0) 
         {
             Time.timeScale = 0.3f;
-            _stateMachine.Dispatch((int)BattleEvent.GameOver);
+            _stateMachine.Dispatch((int)BattleEvent.GameOver, _cancellationToken.Token);
         }
+    }
+
+    private void OnDestroy()
+    {
+        _cancellationToken.Cancel();   
     }
 }

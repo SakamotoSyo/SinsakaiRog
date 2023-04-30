@@ -19,7 +19,6 @@ public class BattleStateView
 
     public void TurnAnim(State state)
     {
-        Debug.Log($"現在のターン{state}");
         if (state.ToString() == "PlayerAttackState")
         {
             _trunText.text = "プレイヤーのターン";

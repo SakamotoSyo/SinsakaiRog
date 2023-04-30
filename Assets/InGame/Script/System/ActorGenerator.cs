@@ -1,11 +1,13 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 
 public class ActorGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _enemyPrefab;
+    [SerializeField] private List<EnemyInstanceData> _enemyPrefabList = new List<EnemyInstanceData>();
     [SerializeField] private Transform _playerInsPos;
     [SerializeField] private Transform _enemyInsPos;
 
@@ -14,10 +16,15 @@ public class ActorGenerator : MonoBehaviour
     public EnemyController EnemyController => _enemyController;
     private EnemyController _enemyController;
 
-    private void Awake()
+    public void Init()
     {
         PlayerGeneration();
         EnemyGenaration();
+    }
+
+    private void Start()
+    {
+        
     }
 
     /// <summary>
@@ -30,10 +37,33 @@ public class ActorGenerator : MonoBehaviour
         _playerController = _playerPrefab.GetComponent<PlayerController>();
     }
 
-    public void EnemyGenaration() 
+    public async void EnemyGenaration() 
     {
-        _enemyPrefab = Instantiate(_enemyPrefab, _enemyInsPos.transform.position, _enemyInsPos.rotation);
-        _enemyPrefab.transform.SetParent(_enemyInsPos);
-        _enemyController = _enemyPrefab.GetComponent<EnemyController>();
+        var token = this.GetCancellationTokenOnDestroy();
+        EnemyInstanceData enemyData = EnemySelect();
+        GameObject enemy = Instantiate(enemyData.EnemyObj, _enemyInsPos.transform.position, _enemyInsPos.rotation);
+        enemy.transform.SetParent(_enemyInsPos);
+        _enemyController = enemy.GetComponent<EnemyController>();
+        await UniTask.Delay(TimeSpan.FromSeconds(0.01), cancellationToken: token);
+        //TODO:‚±‚±‚Å¡‚ÍŽŽŒ±“I‚ÉŽÀŽ{ŒãX‚É‚ÍEnemy‚Ìî•ñ‚ð‚Ç‚±‚©‚©‚ç‚à‚ç‚¢‚½‚¢
+        _enemyController.EnemyStatus.StatusSet(enemyData.EnemyStatus);
     }
+
+    public EnemyInstanceData EnemySelect() 
+    {
+        EnemyStatusData[] enemyDataArray = DataBaseScript.EnemyData.Where(x => x.BaseCurrentLevel <= GameManager.CurremtLevel).ToArray();
+        EnemyStatusData enemyStatusData = enemyDataArray[UnityEngine.Random.Range(0, enemyDataArray.Length)];
+        EnemyInstanceData enemyData = _enemyPrefabList.Find(x => x.InstanceName == enemyStatusData.Name);
+        enemyData.EnemyStatus = enemyStatusData;
+        return enemyData;
+
+    }
+}
+
+[System.Serializable]
+public class EnemyInstanceData 
+{
+    public string InstanceName;
+    public GameObject EnemyObj;
+    public EnemyStatusData EnemyStatus;
 }

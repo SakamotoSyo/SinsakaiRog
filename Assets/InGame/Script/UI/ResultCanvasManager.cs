@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -101,12 +100,17 @@ public class ResultCanvasManager : MonoBehaviour
     /// <param name="obj"></param>
     public void GetReWardCard(GameObject obj)
     {
+        var card = new CardBaseClass();
+        card.Init(obj.GetComponent<CardController>().CardBaseClass);
         //選択されたカードをデッキに追加する
-        _actorGenerator.PlayerController.PlayerStatus.AddDeckCard(obj.GetComponent<CardController>().CardBaseClass);
+        _actorGenerator.PlayerController.PlayerStatus.AddDeckCard(card);
         CloseReWardCardMenu();
     }
 
-    public void CloseReWardCardMenu() 
+    /// <summary>
+    /// 報酬の画面を閉じる
+    /// </summary>
+    public void CloseReWardCardMenu()
     {
 
         for (int i = 0; i < _cardButtonArray.Length; i++)
@@ -128,9 +132,11 @@ public class ResultCanvasManager : MonoBehaviour
         }
     }
 
-    public void ArrowAction()
+    public async void ArrowAction()
     {
         GameManager.SavePlayerData(_actorGenerator.PlayerController.PlayerStatus.GetPlayerSaveData());
+        await FadeScript.Instance.FadeOut();
+        //await FadeScript.Instance.FadeOut();
         LoadSceneManager.ToDownTheStairsScene();
     }
 }

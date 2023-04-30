@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using System;
+using System.Threading;
 
 
 public class CardController : MonoBehaviour
@@ -15,6 +16,7 @@ public class CardController : MonoBehaviour
     public CardBaseClass CardBaseClass => _cardBaseClass.Value;
     public IObservable<CardBaseClass> CardBaseClassOb => _cardBaseClass;
     private ReactiveProperty<CardBaseClass> _cardBaseClass = new ReactiveProperty<CardBaseClass>();
+    private CancellationToken _cancellationToken;
 
     private void Awake()
     {
@@ -37,7 +39,7 @@ public class CardController : MonoBehaviour
     /// </summary>
     public async void ThrowCard() 
     {
-       await _cardAnimation.ThrowAnim(transform);
+       await _cardAnimation.ThrowAnim(transform, _cancellationToken);
         Destroy(gameObject.transform.parent.gameObject);
     }
 

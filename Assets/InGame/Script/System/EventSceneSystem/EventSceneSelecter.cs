@@ -9,6 +9,7 @@ public class EventSceneSelecter : MonoBehaviour
 {
     [SerializeField] private Button _selectButton;
     [SerializeField] private Button _notSelectButton;
+    [SerializeField] private Button _arrowImage;
     [SerializeField] private EventDataBase _eventData;
     [SerializeField] private Text _eventDescriptionText;
     [SerializeField] private GameObject _eventObj;
@@ -64,11 +65,14 @@ public class EventSceneSelecter : MonoBehaviour
 
     public async void NextScene() 
     {
+        var token = this.GetCancellationTokenOnDestroy();
         _selectButton.enabled = false;
         _notSelectButton.enabled = false;
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        _arrowImage.enabled = false;
+        await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: token);
         Debug.Log("éüÇÃÉVÅ[ÉìÇ÷");
         GameManager.SavePlayerData(_playerStatus.GetPlayerSaveData());
+        await FadeScript.Instance.FadeOut();
         SceneManager.LoadScene(_nextSceneName);
     }
 }

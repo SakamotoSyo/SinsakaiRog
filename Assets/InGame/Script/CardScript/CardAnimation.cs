@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 [Serializable]
 public class CardAnimation 
@@ -48,10 +49,10 @@ public class CardAnimation
             .OnComplete(() => _cardEvent.enabled = true);
     }
 
-    public async UniTask ThrowAnim(Transform transform) 
+    public async UniTask ThrowAnim(Transform transform, CancellationToken token) 
     {
        await DOTween.To(() => transform.localPosition,
             x => transform.localPosition = x,
-            _ThrowPos, 0.6f);
+            _ThrowPos, 0.6f).ToUniTask(cancellationToken: token);
     }
 }

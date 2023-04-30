@@ -14,6 +14,9 @@ public class AuxiliaryShopOpenScript : MonoBehaviour
     [SerializeField] private GameObject _elementCard;
     [SerializeField] private Scrollbar _scrollbar;
     [SerializeField] private Text _effectText;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private Animator _removalAnim;
+    [SerializeField] private Animator _elementAnim;
     private List<GameObject> _cardObjList = new();
 
     /// <summary>
@@ -23,8 +26,9 @@ public class AuxiliaryShopOpenScript : MonoBehaviour
     {
         _effectText.text = "Ç«ÇÍÇèúãéÇ∑ÇÈ?";
         var playerStatus = PlayerEventPresenter.PlayerStatus;
-        if (playerStatus.UseGold(_removalCardPrice)) 
+        if (playerStatus.UseGold(_removalCardPrice))
         {
+            _audioSource.Play();
             var deckCradList = playerStatus.GetDeckCardList();
             for (int i = 0; i < deckCradList.Count; i++)
             {
@@ -37,6 +41,10 @@ public class AuxiliaryShopOpenScript : MonoBehaviour
 
             _deckCradObj.SetActive(true);
         }
+        else 
+        {
+            _removalAnim.SetTrigger("WarningAnim");
+        }
     }
 
     public void BuyElement() 
@@ -45,6 +53,7 @@ public class AuxiliaryShopOpenScript : MonoBehaviour
         var playerStatus = PlayerEventPresenter.PlayerStatus;
         if (playerStatus.UseGold(_elementCardPrice))
         {
+            _audioSource.Play();
             var deckCradList = playerStatus.GetDeckCardList().Where(e => e.NumberReinforcement == 0).ToList();
             for (int i = 0; i < deckCradList.Count; i++)
             {
@@ -56,6 +65,10 @@ public class AuxiliaryShopOpenScript : MonoBehaviour
             }
 
             _deckCradObj.SetActive(true);
+        }
+        else 
+        {
+            _elementAnim.SetTrigger("WarningAnim");
         }
     }
 

@@ -21,7 +21,7 @@ public class ActorViewBase : MonoBehaviour
     [SerializeField] private Text _currentHpText;
     [SerializeField] private Text _defenceText;
     [SerializeField] private Text _damageEffectText;
-    [SerializeField] private Animator _damagEffectAnim;
+    [SerializeField] private Animator _damageEffectAnim;
     [Tooltip("Hpバー最長の長さ")]
     private float _maxHpWidth;
     [Tooltip("Hpバーの最大値")]
@@ -83,10 +83,11 @@ public class ActorViewBase : MonoBehaviour
     /// <param name="value">受けたダメージ</param>
     public async void DamageEffectUI(float value)
     {
+        var token = this.GetCancellationTokenOnDestroy();
         _damageEffectText.enabled = true;
         _damageEffectText.text = (int.Parse(_currentHpText.text) - value).ToString("0");
-        _damagEffectAnim.SetTrigger("DamageEffect");
-        await UniTask.WaitUntil(() => _damagEffectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+        _damageEffectAnim.SetTrigger("DamageEffect");
+        await UniTask.WaitUntil(() => _damageEffectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f, cancellationToken: token);
         _damageEffectText.enabled = false;
     }
 }

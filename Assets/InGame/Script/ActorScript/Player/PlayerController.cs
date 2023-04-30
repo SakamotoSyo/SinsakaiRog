@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             _statusBase.AddDamage(damage);
+            GameManager.ResetCurrentLevel();
             _playerAnim.DownAnim();
         }
     }
