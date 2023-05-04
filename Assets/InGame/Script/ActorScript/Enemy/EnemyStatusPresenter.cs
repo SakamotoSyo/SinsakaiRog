@@ -10,7 +10,6 @@ public class EnemyStatusPresenter : IStartable, IDisposable
     private IEnemyStatus _enemyStatusModel;
     private CompositeDisposable _compositeDisposable = new();
 
-    [Inject]
     public EnemyStatusPresenter(IEnemyStatus enemyStatus, EnemyStatusView enemyStatusView, EnemyController enemyController) 
     {
         _enemyStatusModel = enemyStatus;

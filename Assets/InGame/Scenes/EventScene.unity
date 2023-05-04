@@ -85712,6 +85712,7 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _playerView: {fileID: 0}
+  _playerController: {fileID: 0}
   _playerEventView: {fileID: 1212345520}
 --- !u!114 &1212345520
 MonoBehaviour:
@@ -85749,7 +85750,7 @@ MonoBehaviour:
   _eventObj: {fileID: 1770534621}
   _nextSceneName: DownTheStairsScene
   _shopScript: {fileID: 1623509386}
-  _shopAppears: 99
+  _shopAppears: 50
 --- !u!1001 &1212360446
 PrefabInstance:
   m_ObjectHideFlags: 0

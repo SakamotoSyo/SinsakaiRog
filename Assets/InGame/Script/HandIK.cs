@@ -24,8 +24,6 @@ public class HandIK : MonoBehaviour
     void Start()
     {
         _anim = GetComponent<Animator>();
-        _cardBaseClass = new SlashCard();
-        _cardBaseClass.UseEffect();
     }
 
     void OnAnimatorIK(int layerIndex)

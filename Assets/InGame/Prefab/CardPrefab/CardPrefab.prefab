@@ -580,6 +580,7 @@ MonoBehaviour:
     _selectParm: Select
     _drawAnimOffSet: {x: 0, y: 0, z: 0}
     _cardEvent: {fileID: 0}
+    _parentTransform: {fileID: 2590315037519058072}
 --- !u!114 &2590315037519058069
 MonoBehaviour:
   m_ObjectHideFlags: 0

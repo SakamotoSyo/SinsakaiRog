@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _eventName: "\u602A\u3057\u3052\u306A\u30AD\u30CE\u30B3"
   _eventDescription: "\u602A\u3057\u3052\u306A\u30AD\u30CE\u30B3\u304C\u9053\u306B\u751F\u3048\u3066\u3044\u308B\u98DF\u3079\u3066\u307F\u308B\u304B\uFF1F"
+  _eventResults:
+  - "<color=green>10</color>\u56DE\u5FA9\u3057\u305F"
+  - "\u6BD2\u30AD\u30CE\u30B3\u3092\u98DF\u3079\u3066\u3057\u307E\u3063\u305F\u3088\u3046\u3060\u3002<color=red>10</color>\u30C0\u30E1\u30FC\u30B8\u3092\u53D7\u3051\u305F"
   _eventEffect:
-    rid: 5655259205898862592
+    rid: 5655259518183669762
   references:
     version: 2
     RefIds:
-    - rid: 5655259205898862592
+    - rid: 5655259518183669762
       type: {class: MushroomEvent, ns: , asm: Assembly-CSharp}

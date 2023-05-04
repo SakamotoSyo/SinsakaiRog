@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
-using VContainer.Unity;
-using VContainer;
 
 
 [Serializable]
@@ -20,17 +18,14 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     [Tooltip("Ì‚ÄD‚ğ’™‚ß‚Ä‚¨‚­List")]
     private ReactiveCollection<CardBaseClass> _graveyardCards = new();
 
-    [Inject]
     public PlayerStatus() 
     {
-        //GameManager‚©‚çData‚ğó‚¯æ‚éˆ—‚ğ‘‚­
         Init();
     }
 
     public override void Init()
     {
         SetPlayerSaveData(GameManager.SaveData);
-
     }
 
     public void DeckInit() 

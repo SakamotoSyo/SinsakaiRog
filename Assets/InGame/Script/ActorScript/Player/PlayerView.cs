@@ -52,7 +52,7 @@ public class PlayerView : ActorViewBase
             _costEffectText.text = (cost - int.Parse(_costText.text)).ToString("0");
             _costText.text = cost.ToString();
             _costEffectAnim.SetTrigger("CostEffect");
-            await UniTask.WaitUntil(() => _costEffectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+            await UniTask.WaitUntil(() => _costEffectAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f, cancellationToken: token);
             _costEffectText.enabled = false;
         }
         else 

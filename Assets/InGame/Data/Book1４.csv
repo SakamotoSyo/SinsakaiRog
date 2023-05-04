@@ -1,5 +1,5 @@
 id,名前,防御力,ターゲット,コスト,説明文,カードのImage,カードの効果,,ターゲットの選択項目,カード効果項目,,カードのImage
-1,スラッシュ,0,Enemy,1,相手に<color=red>5</color>のダメージを与える,Slash,AttackEffect_5
+1,スラッシュ,0,Enemy,1,相手に<color=red>5</color>のダメージを与える,Slash,AttackEffect_50
 ,,Enemy,Attack_5,,Slash
 ,,,,,,,Drow_1,,Player,Drow_1,,
 ,,,,,,,,,,Enemy_Attack Player_Drow,,
