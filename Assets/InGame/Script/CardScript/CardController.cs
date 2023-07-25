@@ -23,17 +23,6 @@ public class CardController : MonoBehaviour
         _cardAnimation.DrawAnim(transform);
     }
 
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     /// ƒJ[ƒh‚ğÌ‚Ä‚éˆ—‚Ì—¬‚ê
     /// </summary>

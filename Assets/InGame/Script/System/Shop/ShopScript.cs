@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class ShopScript : MonoBehaviour
@@ -14,11 +16,21 @@ public class ShopScript : MonoBehaviour
     [Tooltip("カード除去のPrefab")]
     [SerializeField] private GameObject _cardRemoval;
     [SerializeField] private Vector3 _shopPos;
+    [SceneName]
+    [SerializeField] private string _nextSceneName;
+    [SerializeField] private IPlayerStatus _playerStatus;
+
     private void Start()
     {
-
+        _playerStatus = PlayerEventPresenter.PlayerStatus;
+        //セーブされているデータをセットする
+        _playerStatus.LoadPlayerData(GameManager.SaveData);
+        OpenShop();
     }
 
+    /// <summary>
+    /// Shopのカードを選択した後に表示する
+    /// </summary>
     public async void OpenShop() 
     {
         _shopObj.SetActive(true);
@@ -36,5 +48,15 @@ public class ShopScript : MonoBehaviour
         DOTween.To(() => _shopContentPanel.transform.localPosition,
             x => _shopContentPanel.transform.localPosition = x,
             _shopContentPanel.transform.localPosition + _shopPos, 1f);
+    }
+
+    public async void NextScene()
+    {
+        var token = this.GetCancellationTokenOnDestroy();
+        await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: token);
+        Debug.Log("次のシーンへ");
+        GameManager.SavePlayerData(_playerStatus.GetPlayerSaveData());
+        await FadeScript.Instance.FadeOut();
+        SceneManager.LoadScene(_nextSceneName);
     }
 }
