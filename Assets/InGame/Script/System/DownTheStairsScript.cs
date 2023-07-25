@@ -9,22 +9,35 @@ public class DownTheStairsScript : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     async void Start()
     {
-        var token = this.GetCancellationTokenOnDestroy();
         var playerStatus = PlayerEventPresenter.PlayerStatus;
-        playerStatus.SetPlayerSaveData(GameManager.SaveData);
+        playerStatus.LoadPlayerData(GameManager.SaveData);
+        NextScene();
+    }
+
+    /// <summary>
+    /// 次のシーンに移行する為の処理
+    /// </summary>
+    private async void NextScene() 
+    {
+        var token = this.GetCancellationTokenOnDestroy();
+        //フェード開始
         await FadeScript.Instance.FadeIn();
         _audioSource.Play();
+        //一秒待つ
         await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
         GameManager.NextCurrentLevel();
+        //次のシーンを抽選
         var num = UnityEngine.Random.Range(0, 100);
         await FadeScript.Instance.FadeOut();
+
         if (num < 30 && GameManager.CurremtLevel != 1)
         {
-            LoadSceneManager.ToEventScene();
+            LoadSceneManager.NextStageLoad(StageType.Event);
         }
         else
         {
-            LoadSceneManager.ToBattleScene();
+            LoadSceneManager.NextStageLoad(StageType.Battle);
         }
     }
+
 }

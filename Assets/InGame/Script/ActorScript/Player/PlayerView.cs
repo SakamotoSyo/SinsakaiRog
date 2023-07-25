@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerView : ActorViewBase
@@ -14,16 +11,6 @@ public class PlayerView : ActorViewBase
     [SerializeField] private GameObject _cardPrefab;
     [SerializeField] private Animator _costEffectAnim;
     [SerializeField] private Text _costEffectText;
-
-    private void Start()
-    {
-
-    }
-
-    private void Update()
-    {
-
-    }
 
     public void DrawView(CardBaseClass card)
     {

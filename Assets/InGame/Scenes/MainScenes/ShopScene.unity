@@ -83594,8 +83594,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1212345521}
-        m_TargetAssemblyTypeName: EventSceneSelecter, Assembly-CSharp
+      - m_Target: {fileID: 1623509386}
+        m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
         m_MethodName: NextScene
         m_Mode: 1
         m_Arguments:
@@ -85737,7 +85737,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1212345515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4692a19defcf6024a924ae6b04c0bca8, type: 3}
   m_Name: 
@@ -85749,8 +85749,6 @@ MonoBehaviour:
   _eventDescriptionText: {fileID: 976564173}
   _eventObj: {fileID: 1770534621}
   _nextSceneName: DownTheStairsScene
-  _shopScript: {fileID: 1623509386}
-  _shopAppears: 50
 --- !u!1001 &1212360446
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105505,6 +105503,7 @@ MonoBehaviour:
   _cardRemoval: {fileID: 1228420944208264213, guid: 37d974eef99a0ef42a874266c6529399,
     type: 3}
   _shopPos: {x: 0, y: -1100, z: 0}
+  _nextSceneName: DownTheStairsScene
 --- !u!95 &1623509387
 Animator:
   serializedVersion: 4
@@ -128973,6 +128972,7 @@ MonoBehaviour:
   _cardPickSize: 1.2
   _rectpos: {fileID: 1228420944824903185}
   _controller: {fileID: 1228420944824903198}
+  _uiLine: {fileID: 0}
 --- !u!65 &1228420944824903197
 BoxCollider:
   m_ObjectHideFlags: 0

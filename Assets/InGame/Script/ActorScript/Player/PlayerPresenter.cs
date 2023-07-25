@@ -11,6 +11,7 @@ namespace PlayerPresenterName
         private IPlayerStatus _playerStauts;
         private CompositeDisposable _compositeDisposable = new();
 
+        [Inject]
         public PlayerPresenter(PlayerView playerView, IPlayerStatus playerStatus, PlayerController playerController)
         {
             _playerView = playerView;

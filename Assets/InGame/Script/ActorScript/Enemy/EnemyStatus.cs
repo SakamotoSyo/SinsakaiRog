@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 using UniRx;
-using VContainer;
-using VContainer.Unity;
+using UnityEngine;
 
 public class EnemyStatus : StatusModelBase, IEnemyStatus
 {
@@ -15,11 +12,6 @@ public class EnemyStatus : StatusModelBase, IEnemyStatus
     public IReactiveCollection<EnemyEffectData> EnemyTurnEffect => _enemyTurnEffect;
     [Tooltip("‚Pƒ^[ƒ“‚ÌŠÔ‚É‚â‚és“®")]
     private ReactiveCollection<EnemyEffectData> _enemyTurnEffect = new ReactiveCollection<EnemyEffectData>();
-
-    public override void Init()
-    {
-
-    }
 
     /// <summary>
     /// ŠK‘w‚ªi‚ñ‚¾‚±‚Æ‚É‚æ‚éStatus•â³‚ğ‚©‚¯‚é

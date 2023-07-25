@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
 using System;
+using System.Collections.Generic;
+using UniRx;
+using UnityEngine;
 
 
 [Serializable]
@@ -25,7 +25,7 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
 
     public override void Init()
     {
-        SetPlayerSaveData(GameManager.SaveData);
+        LoadPlayerData(GameManager.SaveData);
     }
 
     public void DeckInit() 
@@ -191,10 +191,10 @@ public class PlayerStatus : StatusModelBase, IPlayerStatus
     }
 
     /// <summary>
-    /// セーブデータをステータスにセットする
+    /// セーブデータをロードしてステータスにセットする
     /// </summary>
     /// <param name="playerData"></param>
-    public void SetPlayerSaveData(PlayerStatusSaveData playerData) 
+    public void LoadPlayerData(PlayerStatusSaveData playerData) 
     {
         _maxHp.Value = playerData.MaxHp;
         _currentHp.Value = playerData.Currenthp;

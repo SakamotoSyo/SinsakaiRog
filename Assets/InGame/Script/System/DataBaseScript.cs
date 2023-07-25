@@ -20,7 +20,7 @@ public class DataBaseScript : MonoBehaviour
     [Header("カードのSpriteデータ")]
     [SerializeField] private  List<CardSpriteData> _cardSprite = new();
     [Tooltip("階層によって敵にかかる倍率")]
-    private static List<EnemyStatusData> _enemyStatusData = new(); 
+    private static List<EnemyStatusData> _enemyStatusData = new();
     private static List<CardBaseClass> _cardList = new();
     private readonly int _floatLoopNum = 2;
     [Tooltip("報酬のベースとなるゴールド")]
@@ -49,13 +49,15 @@ public class DataBaseScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// カードの情報をCSVから読み込む
+    /// </summary>
     private void CardDataInit() 
     {
         StringReader sr = new StringReader(_cardData.text);
         //最初の行はスキップ
         sr.ReadLine();
 
-        //TODO:データの数だけforが周りようにする
         while(true) 
         {
             string line = sr.ReadLine();
@@ -86,6 +88,9 @@ public class DataBaseScript : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Enemyの情報をCSVから読み込む
+    /// </summary>
     public void EnemyDataInit()
     {
         StringReader sr = new StringReader(_enemyData.text);
@@ -122,6 +127,9 @@ public class DataBaseScript : MonoBehaviour
         Debug.Log(_enemyStatusData[0]);
     }
 
+    /// <summary>
+    /// Playerの情報をCSVから読み込む
+    /// </summary>
     public void PlayerDataInit() 
     {
         var playerData = new PlayerStatusSaveData();

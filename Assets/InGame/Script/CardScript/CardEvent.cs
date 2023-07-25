@@ -10,11 +10,12 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     [SerializeField] private float _cardPickSize;
     [SerializeField] private RectTransform _rectpos;
     [SerializeField] private CardController _controller;
+    [SerializeField] private UIOutline _uiLine;
 
     private bool _moveFenish = false;
     private Vector3 _localScale;
     private Vector3 _savePos;
-    private Tween _tween;
+    private Tween _clickTween;
 
     private void Awake()
     {
@@ -54,7 +55,7 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     public void OnPointerUp(PointerEventData eventData)
     {
         //クリックの終了時クリックし始めたpositionまで戻る
-      _tween = DOTween.To(() => transform.localPosition,
+      _clickTween = DOTween.To(() => transform.localPosition,
             x => transform.localPosition = x,
             _savePos,0.5f)
             .OnStart(() => _moveFenish = true)
@@ -63,7 +64,6 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
                 transform.localPosition = _savePos;
                 _moveFenish = false;
             });
-
     }
 
 
@@ -81,6 +81,6 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
 
     private void OnDestroy()
     {
-        _tween.Kill();
+        _clickTween.Kill();
     }
 }

@@ -7,21 +7,13 @@ public class GameManager : MonoBehaviour
     /// <summary>Œ»İ‚ÌŠK‘w</summary>
     public static int CurremtLevel => currentLevel;
     public static PlayerStatusSaveData SaveData => saveData;
+    public static Vector2 PlayerMapPosition => _playerMapPosition;
+    private static Vector2 _playerMapPosition;
 
     [Tooltip("Œ»İ‚ÌŠK‘w")]
-    private static int currentLevel = 0;
+    private static int currentLevel = 1;
     private static float score;
     private static PlayerStatusSaveData saveData = new();
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-        
-    }
 
     /// <summary>
     /// ŠK‘wˆê‚Âã‚ª‚é
