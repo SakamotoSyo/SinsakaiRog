@@ -3,9 +3,7 @@ using UnityEngine;
 using System;
 using System.Text;
 
-[System.Serializable]
-[CreateAssetMenu(fileName = "CardData", menuName = "SakamotoScriptable/CradData")]
-public class CardBaseClass : ScriptableObject
+public class CardBaseClass
 {
     public int ID => _id;
     private int _id;
