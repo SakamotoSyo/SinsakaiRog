@@ -8,7 +8,12 @@ using System.Threading;
 
 public class DrawState : State
 {
-    protected override async void OnEnter(State currentState, CancellationToken token)
+    protected override void OnEnter(State currentState, CancellationToken token)
+    {
+        DrawEnter(token).Forget();
+    }
+
+    private async UniTask DrawEnter(CancellationToken token) 
     {
         Owner.EnemyController.EnemyStatus.AttackDecision();
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: token);

@@ -37,7 +37,12 @@ public class BattleStateManager : MonoBehaviour
         GameOver,
     }
 
-    private async void Start()
+    private void Start()
+    {
+        SetUp().Forget();
+    }
+
+    private async UniTask SetUp() 
     {
         _cancellationToken = new CancellationTokenSource();
         await FadeScript.Instance.FadeIn();

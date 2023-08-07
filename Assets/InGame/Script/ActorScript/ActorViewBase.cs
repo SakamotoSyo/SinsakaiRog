@@ -42,7 +42,7 @@ public class ActorViewBase : MonoBehaviour
     {
         if (int.Parse(_currentHpText.text) > 0) 
         {
-            DamageEffectUI(currentHp);
+            DamageEffectUI(currentHp).Forget();
         }
         //バーの長さを更新
         _rectCurrent.SetWidth(GetWidth(currentHp));
@@ -81,7 +81,7 @@ public class ActorViewBase : MonoBehaviour
     /// ダメージの受けた数字分のエフェクトを出す
     /// </summary>
     /// <param name="value">受けたダメージ</param>
-    public async void DamageEffectUI(float value)
+    public async UniTask DamageEffectUI(float value)
     {
         var token = this.GetCancellationTokenOnDestroy();
         _damageEffectText.enabled = true;

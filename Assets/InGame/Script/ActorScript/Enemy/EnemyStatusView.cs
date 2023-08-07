@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class EnemyStatusView : ActorViewBase
 {
@@ -36,7 +37,7 @@ public class EnemyStatusView : ActorViewBase
     /// <param name="effectData"></param>
     public void DeleteIcon(EnemyEffectData effectData) 
     {
-        _iconScriptList[0].SelectIcon();
+        _iconScriptList[0].SelectIcon().Forget();
         _iconScriptList.RemoveAt(0);
     }
 

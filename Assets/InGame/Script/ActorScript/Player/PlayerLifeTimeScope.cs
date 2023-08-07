@@ -16,5 +16,4 @@ public class PlayerLifeTimeScope : LifetimeScope
         builder.RegisterComponent(_playerController);
         builder.RegisterEntryPoint<PlayerPresenter>(Lifetime.Singleton);
     }
-
 }

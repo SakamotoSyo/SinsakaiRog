@@ -15,6 +15,7 @@ public class ShopScript : MonoBehaviour
     [SerializeField] private GameObject _shopCardPrefab;
     [Tooltip("カード除去のPrefab")]
     [SerializeField] private GameObject _cardRemoval;
+    [SerializeField] private Button _nextSceneButton;
     [SerializeField] private Vector3 _shopPos;
     [SceneName]
     [SerializeField] private string _nextSceneName;
@@ -25,13 +26,14 @@ public class ShopScript : MonoBehaviour
         _playerStatus = PlayerEventPresenter.PlayerStatus;
         //セーブされているデータをセットする
         _playerStatus.LoadPlayerData(GameManager.SaveData);
-        OpenShop();
+        OpenShop().Forget();
+        _nextSceneButton.onClick.AddListener(() => NextScene().Forget());
     }
 
     /// <summary>
     /// Shopのカードを選択した後に表示する
     /// </summary>
-    public async void OpenShop() 
+    public async UniTask OpenShop() 
     {
         _shopObj.SetActive(true);
         //Shopのカードを生成
@@ -50,13 +52,13 @@ public class ShopScript : MonoBehaviour
             _shopContentPanel.transform.localPosition + _shopPos, 1f);
     }
 
-    public async void NextScene()
+    public async UniTask NextScene()
     {
         var token = this.GetCancellationTokenOnDestroy();
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: token);
         Debug.Log("次のシーンへ");
         GameManager.SavePlayerData(_playerStatus.GetPlayerSaveData());
         await FadeScript.Instance.FadeOut();
-        SceneManager.LoadScene(_nextSceneName);
+        LoadSceneManager.ToStageMapScene();
     }
 }

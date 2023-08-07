@@ -6,11 +6,16 @@ using System.Threading;
 public class PlayerAttackState : State
 {
     private readonly float _trunAnimTime = 2;
-    protected override async void OnEnter(State currentState, CancellationToken token)
+    protected override void OnEnter(State currentState, CancellationToken token)
+    {
+        PlayerAttackEnter(token).Forget();
+    }
+
+    private async UniTask PlayerAttackEnter(CancellationToken token) 
     {
         AudioManager.Instance.PlaySound(SoundPlayType.TurnSwitching);
         Owner.BattleStateView.TurnAnim(this);
-        await UniTask.Delay(TimeSpan.FromSeconds(_trunAnimTime), cancellationToken:token);
+        await UniTask.Delay(TimeSpan.FromSeconds(_trunAnimTime), cancellationToken: token);
         Owner.BattleStateView.StopButton(false);
     }
 

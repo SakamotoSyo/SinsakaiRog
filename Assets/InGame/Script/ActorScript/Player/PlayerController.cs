@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
        var controllerArray = _cardInsPos.GetComponentsInChildren<CardController>();
        for(int i = 0; i < controllerArray.Length; i++) 
         {
-            controllerArray[i].ThrowCard();
+            controllerArray[i].ThrowCard().Forget();
         }
     }
 

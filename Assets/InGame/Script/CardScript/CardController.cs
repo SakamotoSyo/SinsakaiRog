@@ -26,7 +26,7 @@ public class CardController : MonoBehaviour
     /// <summary>
     /// ƒJ[ƒh‚ğÌ‚Ä‚éˆ—‚Ì—¬‚ê
     /// </summary>
-    public async void ThrowCard() 
+    public async UniTask ThrowCard() 
     {
        await _cardAnimation.ThrowAnim(transform, _cancellationToken);
         Destroy(gameObject.transform.parent.gameObject);

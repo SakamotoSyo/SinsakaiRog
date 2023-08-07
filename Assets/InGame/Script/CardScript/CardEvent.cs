@@ -28,10 +28,8 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
        
     }
 
-    private async void OnEnable()
+    private void OnEnable()
     {
-        var token = this.GetCancellationTokenOnDestroy();
-        await UniTask.Delay(TimeSpan.FromSeconds(0.1), cancellationToken: token);
         _moveFenish = false;
     }
 

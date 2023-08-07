@@ -17,6 +17,7 @@ public class ResultCanvasManager : MonoBehaviour
     [SerializeField] private GameObject _itemPanel;
     [SerializeField] private GameObject _itemButtonPrefab;
     [SerializeField] private GameObject _cardButtonPrefab;
+    [SerializeField] private Button _nextSceneButton;
     [Tooltip("カードが集まるTransform")]
     [SerializeField] private Transform _cardTransform;
     [SerializeField] private ActorGenerator _actorGenerator;
@@ -28,6 +29,7 @@ public class ResultCanvasManager : MonoBehaviour
     public void ActiveResultPanel()
     {
         _itemPanel.SetActive(true);
+        _nextSceneButton.onClick.AddListener(() => NextSceneAction().Forget());
         ItemButtonReWardIns();
     }
 
@@ -132,12 +134,11 @@ public class ResultCanvasManager : MonoBehaviour
         }
     }
 
-    public async void ArrowAction()
+    public async UniTask NextSceneAction()
     {
         GameManager.SavePlayerData(_actorGenerator.PlayerController.PlayerStatus.GetPlayerSaveData());
         await FadeScript.Instance.FadeOut();
-        //await FadeScript.Instance.FadeOut();
-        LoadSceneManager.ToDownTheStairsScene();
+        LoadSceneManager.ToStageMapScene();
     }
 }
 

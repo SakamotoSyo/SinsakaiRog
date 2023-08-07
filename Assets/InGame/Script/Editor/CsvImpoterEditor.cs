@@ -26,53 +26,53 @@ public class CsvImpoterEditor : Editor
     /// <summary>csvファイルのデータからScriptableObjectを作成する</summary>
     private void SetCardData(CsvImporter csvImpoter)
     {
-        if (csvImpoter.csvFile == null)
-        {
-            Debug.LogError("CSVファイルがセットされていません");
-            return;
-        }
+        //if (csvImpoter.csvFile == null)
+        //{
+        //    Debug.LogError("CSVファイルがセットされていません");
+        //    return;
+        //}
 
-        StringReader sr = new StringReader(csvImpoter.csvFile.text);
-        //最初の行はスキップ
-        sr.ReadLine();
+        //StringReader sr = new StringReader(csvImpoter.csvFile.text);
+        ////最初の行はスキップ
+        //sr.ReadLine();
 
-        //ToDo: カードの情報が今は一つしかないためここのループは１
-        for (int i = 0; i < 2; i++)
-        {
-            string line = sr.ReadLine();
+        ////ToDo: カードの情報が今は一つしかないためここのループは１
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    string line = sr.ReadLine();
 
-            if (string.IsNullOrEmpty(line))
-            {
-                break;
-            }
+        //    if (string.IsNullOrEmpty(line))
+        //    {
+        //        break;
+        //    }
 
-            string[] parts = line.Split(',');
-            string path = "Assets/InGame/Data/CardData/CardData" + parts[1] + ".asset";
-            //アイテムのインスタンスをメモリ上に作成
-            var cardBaseClass = CreateInstance<CardBaseClass>();
+        //    string[] parts = line.Split(',');
+        //    string path = "Assets/InGame/Data/CardData/CardData" + parts[1] + ".asset";
+        //    //アイテムのインスタンスをメモリ上に作成
+        //    var cardBaseClass = CreateInstance<CardBaseClass>();
 
-            Debug.Log(line);
-            int id = int.Parse(parts[0]);
-            float[] floats = new float[_floatLoopNum];
-            floats[0] = float.Parse(parts[2]);
-            floats[1] = float.Parse(parts[4]);
-            var gold = int.Parse(parts[7]);
+        //    Debug.Log(line);
+        //    int id = int.Parse(parts[0]);
+        //    float[] floats = new float[_floatLoopNum];
+        //    floats[0] = float.Parse(parts[2]);
+        //    floats[1] = float.Parse(parts[4]);
+        //    var gold = int.Parse(parts[7]);
 
-            List<EffectData> effectList = new List<EffectData>();
-            var enhansmentData = parts[8].Split('_');
-            //ここのマジックナンバー後で修正
-            for (int j = 9; j < parts.Length; j++)
-            {
-                var data = parts[j].Split('_');
-                effectList.Add(new EffectData(MakeClass<IEffect>(data[0] + ", Assembly-CSharp"), float.Parse(data[1])));
-            }
-            Debug.Log(id);
-            cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1],parts[5], null
-                , gold, new EnhancementData(enhansmentData[0], enhansmentData[1]), effectList);
-            var asset = (CardBaseClass)AssetDatabase.LoadAssetAtPath(path, typeof(CardBaseClass));
+        //    List<EffectData> effectList = new List<EffectData>();
+        //    var enhansmentData = parts[8].Split('_');
+        //    //ここのマジックナンバー後で修正
+        //    for (int j = 9; j < parts.Length; j++)
+        //    {
+        //        var data = parts[j].Split('_');
+        //        effectList.Add(new EffectData(MakeClass<IEffect>(data[0] + ", Assembly-CSharp"), float.Parse(data[1])));
+        //    }
+        //    Debug.Log(id);
+        //    cardBaseClass = new CardBaseClass(id, parts[1], floats[0], parts[3], floats[1],parts[5], null
+        //        , gold, new EnhancementData(enhansmentData[0], enhansmentData[1]), effectList);
+        //    var asset = (CardBaseClass)AssetDatabase.LoadAssetAtPath(path, typeof(CardBaseClass));
 
 
-            AssetDatabase.CreateAsset(cardBaseClass, path);
+        //    AssetDatabase.CreateAsset(cardBaseClass, path);
             //if (asset == null)
             //{
             //    //指定したパスが存在しなかった場合新規作成
@@ -85,15 +85,15 @@ public class CsvImpoterEditor : Editor
             //    AssetDatabase.SaveAssets();
             //}
 
-            AssetDatabase.Refresh();
-        }
+           // AssetDatabase.Refresh();
+        //}
     }
 
     /// <summary>
     /// イベントのデータを作成する
     /// </summary>
     /// <param name="csvImpoter"></param>
-    private void SetEventData(CsvImporter csvImpoter) 
+    private void SetEventData(CsvImporter csvImpoter)
     {
         if (csvImpoter.csvFile == null)
         {
@@ -104,7 +104,7 @@ public class CsvImpoterEditor : Editor
         StringReader sr = new StringReader(csvImpoter.csvFile.text);
         //最初の行はスキップ
         sr.ReadLine();
-        while (true) 
+        while (true)
         {
             string line = sr.ReadLine();
 
@@ -123,7 +123,7 @@ public class CsvImpoterEditor : Editor
             Debug.Log(eventResultsArray[0]);
             eventSelectCs.SetEventResultsTextArray(eventResultsArray);
 
-            var asset = (CardBaseClass)AssetDatabase.LoadAssetAtPath(path, typeof(CardBaseClass));
+            var asset = AssetDatabase.LoadAssetAtPath(path, typeof(EventSelectDataScript)) as EventSelectDataScript;
             if (asset == null)
             {
                 //指定したパスが存在しなかった場合新規作成

@@ -19,7 +19,7 @@ public class ActorGenerator : MonoBehaviour
     public void Init()
     {
         PlayerGeneration();
-        EnemyGenaration();
+        EnemyGenaration().Forget();
     }
 
     private void Start()
@@ -37,7 +37,7 @@ public class ActorGenerator : MonoBehaviour
         _playerController = _playerPrefab.GetComponent<PlayerController>();
     }
 
-    public async void EnemyGenaration() 
+    public async UniTask EnemyGenaration() 
     {
         var token = this.GetCancellationTokenOnDestroy();
         EnemyInstanceData enemyData = EnemySelect();

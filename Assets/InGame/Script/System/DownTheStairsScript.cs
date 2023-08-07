@@ -7,17 +7,17 @@ using System;
 public class DownTheStairsScript : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
-    async void Start()
+    void Start()
     {
         var playerStatus = PlayerEventPresenter.PlayerStatus;
         playerStatus.LoadPlayerData(GameManager.SaveData);
-        NextScene();
+        NextScene().Forget();
     }
 
     /// <summary>
     /// 次のシーンに移行する為の処理
     /// </summary>
-    private async void NextScene() 
+    private async UniTask NextScene() 
     {
         var token = this.GetCancellationTokenOnDestroy();
         //フェード開始

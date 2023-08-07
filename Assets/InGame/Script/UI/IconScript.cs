@@ -23,7 +23,7 @@ public class IconScript : MonoBehaviour
         _iconText.text = Math.Floor(effectNum).ToString();
     }
 
-    public async void SelectIcon() 
+    public async UniTask SelectIcon() 
     {
         var token = this.GetCancellationTokenOnDestroy();
         _effectAnim.enabled = true;

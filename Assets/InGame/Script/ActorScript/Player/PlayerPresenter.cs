@@ -2,6 +2,7 @@ using System;
 using UniRx;
 using VContainer;
 using VContainer.Unity;
+using Cysharp.Threading.Tasks;
 
 namespace PlayerPresenterName
 {
@@ -25,7 +26,7 @@ namespace PlayerPresenterName
             _playerStauts.GetGraveyardCardsCountOb().ObserveCountChanged().Subscribe(_playerView.GraveyardCardsView).AddTo(_compositeDisposable);
             _playerStauts.GetDeckCardListOb().ObserveCountChanged().Subscribe(_playerView.DeckCardView).AddTo(_compositeDisposable);
             _playerStauts.GetStatusBase().GetDefeceOb().Subscribe(_playerView.SetDefense).AddTo(_compositeDisposable);
-            _playerStauts.GetCostOb().Subscribe(_playerView.SetCostText).AddTo(_compositeDisposable);
+            _playerStauts.GetCostOb().Subscribe(x => _playerView.SetCostText(x).Forget()).AddTo(_compositeDisposable);
             _playerStauts.GetStatusBase().GetMaxHpOb().Subscribe(_playerView.MaxHpSet).AddTo(_compositeDisposable);
             _playerStauts.GetStatusBase().GetCurrentHpOb().Subscribe(_playerView.SetHpCurrent).AddTo(_compositeDisposable);
         }

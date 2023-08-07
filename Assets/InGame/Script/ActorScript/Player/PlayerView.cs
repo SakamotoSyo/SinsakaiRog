@@ -30,7 +30,7 @@ public class PlayerView : ActorViewBase
         _deckText.text = count.ToString();
     }
 
-    public async void SetCostText(float cost)
+    public async UniTask SetCostText(float cost)
     {
         if (int.Parse(_costText.text) < cost)
         {
