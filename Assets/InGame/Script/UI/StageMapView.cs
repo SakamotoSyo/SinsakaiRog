@@ -11,36 +11,74 @@ public class StageMapView : MonoBehaviour
 {
     [Tooltip("マップのListの何番目を適応させるか")]
     [SerializeField] private int _mapListSelectNum;
+    [Tooltip("ステージのSpriteを格納する")]
     [SerializeField] private Sprite[] _spriteArray;
+    [Tooltip("ステージ名を入力する")]
     [SerializeField] private string[] _stageInfo;
-    [SerializeField] private Image[] _stageImage;
+
     // Start is called before the first frame update
     void Start()
     {
         SetUp();
     }
 
-    private void SetUp() 
+    private void SetUp()
     {
         var cardArray = GetComponentsInChildren<StageSelectCard>();
-        var cardInfoText = GetComponentsInChildren<Text>();
-        if (GenerationDungeonMap.DungeonMapData[1] == null) 
-        {
-            Debug.Log("Null");
-        }
 
-        for (int i = 0; i < GenerationDungeonMap.DungeonMapData[_mapListSelectNum].Length; i++) 
+        SetCardView(cardArray);
+    }
+
+    /// <summary>
+    /// ダンジョンのマップを取得しカードの見た目を設定する
+    /// </summary>
+    /// <param name="cardArray"></param>
+    /// <param name="cardInfoText"></param>
+    private void SetCardView(StageSelectCard[] cardArray)
+    {
+        var playerPos = GameManager.PlayerMapPosition;
+        int[,] dungeonMapData = GenerationDungeonMap.DungeonMapData;
+        var splitNum = (cardArray.Length - 1) / 2;
+
+        for (int i = 0; i < cardArray.Length; i++) 
         {
-            //カードに自分がどのステージのカードなのかの情報を渡す
-            cardArray[i].SetStageType((StageType)GenerationDungeonMap.DungeonMapData[_mapListSelectNum][i]);
-            _stageImage[i].sprite = _spriteArray[GenerationDungeonMap.DungeonMapData[_mapListSelectNum][i]];
-            cardInfoText[i].text = _stageInfo[GenerationDungeonMap.DungeonMapData[_mapListSelectNum][i]];
+            //範囲外じゃなかったら
+            if (ArrayOutOfRangeCheck(dungeonMapData, i - (splitNum - playerPos.X), playerPos.Y + _mapListSelectNum))
+            {
+                 var surroundingsNum = dungeonMapData[playerPos.Y + _mapListSelectNum, i - (splitNum - playerPos.X)];
+
+                cardArray[i].SetView(_spriteArray[surroundingsNum - 1], _stageInfo[surroundingsNum - 1]);
+                //一番前のカード列ではない場合continueする
+                if (_mapListSelectNum != 0) continue;
+                //カードに自分がどのステージのカードなのかの情報を渡す
+                cardArray[i].SetStageType((StageType)surroundingsNum);
+                cardArray[i].SetCardMapPos(i - (splitNum - playerPos.X), playerPos.Y + 1);
+            }
+            else 
+            {
+
+            }
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// 配列の範囲外かどうかCheckする
+    /// </summary>
+    /// <param name="array"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    private bool ArrayOutOfRangeCheck(int[,] array, int x, int y) 
     {
-        
+        if (array.GetLength(0) <= y || array.GetLength(1) <= x || x < 0 || y < 0) 
+        {
+            return false;
+        }
+
+        if (array[y, x] == 0) 
+        {
+            return false;
+        }
+
+        return true;
     }
 }

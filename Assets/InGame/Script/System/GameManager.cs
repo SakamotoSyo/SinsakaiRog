@@ -7,8 +7,7 @@ public class GameManager : MonoBehaviour
     /// <summary>Œ»İ‚ÌŠK‘w</summary>
     public static int CurremtLevel => currentLevel;
     public static PlayerStatusSaveData SaveData => saveData;
-    public static Vector2 PlayerMapPosition => _playerMapPosition;
-    private static Vector2 _playerMapPosition;
+    public static (int X, int Y) PlayerMapPosition { set; get;}
 
     [Tooltip("Œ»İ‚ÌŠK‘w")]
     private static int currentLevel = 1;
