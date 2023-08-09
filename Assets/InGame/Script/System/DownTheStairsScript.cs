@@ -26,18 +26,8 @@ public class DownTheStairsScript : MonoBehaviour
         //ˆê•b‘Ò‚Â
         await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
         GameManager.NextCurrentLevel();
-        //Ÿ‚ÌƒV[ƒ“‚ğ’Š‘I
-        var num = UnityEngine.Random.Range(0, 100);
+     
         await FadeScript.Instance.FadeOut();
-
-        if (num < 30 && GameManager.CurremtLevel != 1)
-        {
-            LoadSceneManager.NextStageLoad(StageType.Event);
-        }
-        else
-        {
-            LoadSceneManager.NextStageLoad(StageType.Battle);
-        }
+        LoadSceneManager.NextStageLoad();
     }
-
 }

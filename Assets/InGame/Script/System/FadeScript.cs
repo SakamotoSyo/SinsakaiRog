@@ -15,10 +15,19 @@ public class FadeScript : SingletonBehaviour<FadeScript>
     [SerializeField] private Image _fadeImage;
     [SerializeField] private Color _fadeColor;
     private CancellationToken _cancellationToken;
+    private bool _isFadeIn = false;
 
     protected override void OnAwake()
     {
         _cancellationToken = this.GetCancellationTokenOnDestroy();
+    }
+
+    private void Start()
+    {
+        if (!_isFadeIn) 
+        {
+            FadeIn().Forget();
+        }
     }
 
     public async UniTask FadeOut() 

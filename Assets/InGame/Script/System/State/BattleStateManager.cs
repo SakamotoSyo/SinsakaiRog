@@ -39,12 +39,12 @@ public class BattleStateManager : MonoBehaviour
 
     private void Start()
     {
+        _cancellationToken = new CancellationTokenSource();
         SetUp().Forget();
     }
 
     private async UniTask SetUp() 
     {
-        _cancellationToken = new CancellationTokenSource();
         await FadeScript.Instance.FadeIn();
         _isStart = true;
         _playerCon = _generator.PlayerController;

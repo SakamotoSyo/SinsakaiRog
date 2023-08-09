@@ -72,7 +72,8 @@ public class StageSelectCard : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         directionCs.SetView(_cardImage.sprite, _cardText.text);
         await directionCs.StartMove();
         await FadeScript.Instance.FadeOut();
-        LoadSceneManager.NextStageLoad(_stageType);
+        LoadSceneManager.SetNectStageType(_stageType);
+        LoadSceneManager.ToDownTheStairsScene();
     }
 
     public void OnPointerUp(PointerEventData eventData)
