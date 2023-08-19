@@ -19,7 +19,7 @@ public class ActorGenerator : MonoBehaviour
     public void Init()
     {
         PlayerGeneration();
-        EnemyGenaration().Forget();
+        EnemyGenaration();
     }
 
     private void Start()
@@ -37,14 +37,12 @@ public class ActorGenerator : MonoBehaviour
         _playerController = _playerPrefab.GetComponent<PlayerController>();
     }
 
-    public async UniTask EnemyGenaration() 
+    public void EnemyGenaration() 
     {
-        var token = this.GetCancellationTokenOnDestroy();
         EnemyInstanceData enemyData = EnemySelect();
         GameObject enemy = Instantiate(enemyData.EnemyObj, _enemyInsPos.transform.position, _enemyInsPos.rotation);
         enemy.transform.SetParent(_enemyInsPos);
         _enemyController = enemy.GetComponent<EnemyController>();
-        await UniTask.Delay(TimeSpan.FromSeconds(0.01), cancellationToken: token);
         //TODO:Ç±Ç±Ç≈ç°ÇÕééå±ìIÇ…é¿é{å„ÅXÇ…ÇÕEnemyÇÃèÓïÒÇÇ«Ç±Ç©Ç©ÇÁÇ‡ÇÁÇ¢ÇΩÇ¢
         _enemyController.EnemyStatus.StatusSet(enemyData.EnemyStatus);
     }

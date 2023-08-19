@@ -49,7 +49,8 @@ public class ShopScript : MonoBehaviour
 
         DOTween.To(() => _shopContentPanel.transform.localPosition,
             x => _shopContentPanel.transform.localPosition = x,
-            _shopContentPanel.transform.localPosition + _shopPos, 1f);
+            _shopContentPanel.transform.localPosition + _shopPos, 1f)
+            .SetLink(gameObject);
     }
 
     public async UniTask NextScene()

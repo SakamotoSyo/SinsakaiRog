@@ -15,7 +15,6 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     private bool _moveFenish = false;
     private Vector3 _localScale;
     private Vector3 _savePos;
-    private Tween _clickTween;
 
     private void Awake()
     {
@@ -53,10 +52,11 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     public void OnPointerUp(PointerEventData eventData)
     {
         //クリックの終了時クリックし始めたpositionまで戻る
-      _clickTween = DOTween.To(() => transform.localPosition,
+            DOTween.To(() => transform.localPosition,
             x => transform.localPosition = x,
             _savePos,0.5f)
             .OnStart(() => _moveFenish = true)
+            .SetLink(gameObject)
             .OnComplete(() => 
             {
                 transform.localPosition = _savePos;
@@ -75,10 +75,5 @@ public class CardEvent : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoin
     {
         _controller.CardAnimation.SelectAnim(false);
         _rectpos.localScale = _localScale;
-    }
-
-    private void OnDestroy()
-    {
-        _clickTween.Kill();
     }
 }

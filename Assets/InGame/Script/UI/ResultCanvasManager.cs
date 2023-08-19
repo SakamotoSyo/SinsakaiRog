@@ -4,6 +4,9 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Resultの報酬を生成したりするクラス
+/// </summary>
 public class ResultCanvasManager : MonoBehaviour
 {
     [Tooltip("報酬の生成場所")]
@@ -13,7 +16,7 @@ public class ResultCanvasManager : MonoBehaviour
     [Tooltip("報酬をまとめている親オブジェクト")]
     [SerializeField] private GameObject _reWardParentObj;
     [Tooltip("カードの報酬をまとめている親オブジェクト")]
-    [SerializeField] private GameObject _cardParentObj;
+    [SerializeField] private GameObject _cardReWardParentObj;
     [SerializeField] private GameObject _itemPanel;
     [SerializeField] private GameObject _itemButtonPrefab;
     [SerializeField] private GameObject _cardButtonPrefab;
@@ -33,10 +36,13 @@ public class ResultCanvasManager : MonoBehaviour
         ItemButtonReWardIns();
     }
 
-    public void ActiveReWardPanel()
+    /// <summary>
+    /// 報酬の画面を表示する
+    /// </summary>
+    public void ActiveReWardPanel()　
     {
         _itemPanel.SetActive(true);
-        _cardParentObj.SetActive(false);
+        _cardReWardParentObj.SetActive(false);
     }
 
     /// <summary>
@@ -76,7 +82,7 @@ public class ResultCanvasManager : MonoBehaviour
     {
         Destroy(_itemObjArray[1]);
         _reWardParentObj.SetActive(false);
-        _cardParentObj.SetActive(true);
+        _cardReWardParentObj.SetActive(true);
         //TODO:マジックナンバー
         //報酬の回数分カードを生成
         for (int i = 0; i < 3; i++)
@@ -126,6 +132,7 @@ public class ResultCanvasManager : MonoBehaviour
             DOTween.To(() => moveObj.transform.localPosition,
                 x => moveObj.transform.localPosition = x,
                 _cardTransform.position, 0.5f)
+                .SetLink(gameObject)
                 .OnComplete(() =>
                 {
                     Destroy(moveObj);

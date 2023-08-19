@@ -38,6 +38,7 @@ public class StageSelectCard : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         //選択できるカードを強調する
         if (!_uiLine) return;
         transform.DOScale(new Vector3(0.91f, 0.91f, 0.91f), 1f)
+                 .SetLink(gameObject)
                  .SetLoops(-1, LoopType.Yoyo);
     }
 
@@ -65,6 +66,7 @@ public class StageSelectCard : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         DOTween.To(() => Camera.main.transform.position,
                    x => Camera.main.transform.position = x,
                    new Vector3(transform.position.x, transform.position.y + 700f, Camera.main.transform.position.z), 2f)
+                   .SetLink(gameObject)
                    .SetEase(Ease.OutSine);
 
         var obj = Instantiate(_cardDirectionObj, _cardDirectionInsPos);
@@ -85,6 +87,7 @@ public class StageSelectCard : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         if (!_uiLine) return;
         _pointEnterTween = _uiLine.DOColor(new Color(_uiLine.color.r, _uiLine.color.g, _uiLine.color.b, 1), 1.5f)
+               .SetLink(gameObject)
                .SetLoops(-1, LoopType.Yoyo);
         _rectpos.localScale *= _cardPickSize;
     }

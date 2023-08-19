@@ -21,6 +21,7 @@ public class ActorAnimBase
     public async UniTask AttackAnim(CancellationToken token)
     {
         _anim.SetTrigger(_attackParm);
+        
         await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f, 
                                 cancellationToken: token);
     }

@@ -20,19 +20,20 @@ public class CardController : MonoBehaviour
 
     private void Awake()
     {
+        _cancellationToken = this.GetCancellationTokenOnDestroy();
         _cardAnimation.DrawAnim(transform);
     }
 
     /// <summary>
     /// ƒJ[ƒh‚ğÌ‚Ä‚éˆ—‚Ì—¬‚ê
     /// </summary>
-    public async UniTask ThrowCard() 
+    public async UniTask ThrowCard()
     {
-       await _cardAnimation.ThrowAnim(transform, _cancellationToken);
+        await _cardAnimation.ThrowAnim(transform, _cancellationToken);
         Destroy(gameObject.transform.parent.gameObject);
     }
 
-    public void SetCardBaseClass(CardBaseClass card) 
+    public void SetCardBaseClass(CardBaseClass card)
     {
         _cardBaseClass.Value = card;
     }

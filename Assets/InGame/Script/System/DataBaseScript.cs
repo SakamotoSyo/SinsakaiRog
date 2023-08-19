@@ -156,6 +156,7 @@ public class DataBaseScript : MonoBehaviour
     /// <returns></returns>
     public CardBaseClass NewCard(CardBaseClass cardBase) 
     {
+        //var card = ScriptableObject.CreateInstance("CardBaseClass") as CardBaseClass;
         var card = new CardBaseClass();
         card.Init(cardBase);
         return card;

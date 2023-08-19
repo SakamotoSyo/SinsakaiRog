@@ -14,6 +14,7 @@ public class CardAnimation
     [SerializeField] private Vector3 _drawAnimOffSet;
     [SerializeField] private CardEvent _cardEvent;
     [SerializeField] private Vector3 _ThrowPos;
+    [SerializeField] private bool _isDrawAnim;
     private Transform _parentTransform;
     private Tween _tween;
 
@@ -42,6 +43,7 @@ public class CardAnimation
 
     public void DrawAnim(Transform transform) 
     {
+        if (_isDrawAnim) return;
        _tween = DOTween.To(() => transform.localPosition - _parentTransform.localPosition - _drawAnimOffSet,
             x => transform.localPosition = x,
             transform.localPosition, 0.5f)
